@@ -237,6 +237,16 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-acti
 .botinfo .bar i{background:var(--botc,var(--cyan))}
 .botinfo .bar::after{background:repeating-linear-gradient(90deg,transparent 0 calc(5% - 2px),var(--panel2) calc(5% - 2px) 5%)}
 .botinfo small{font-size:10px;color:var(--muted)}
+.svrow{display:flex;justify-content:space-between;gap:10px;border-bottom:1px solid var(--line);padding:10px 0;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.svrow b{font-family:var(--f-num);font-weight:600;color:var(--text);text-transform:none;letter-spacing:0;text-align:right}
+.btns{display:grid;grid-template-columns:repeat(auto-fit,minmax(0,1fr));gap:6px;margin-top:8px}
+.btns .big{padding:12px 4px;font-size:11px;letter-spacing:.1em}
+#sv_code{display:block;width:100%;box-sizing:border-box;margin-top:8px;background:var(--bg);border:1px solid var(--line2);color:var(--text);font-family:var(--f-num);font-size:11px;line-height:1.4;padding:8px;resize:vertical;word-break:break-all}
+.svmsg{min-height:18px;margin-top:8px;font-size:12px;line-height:1.4;color:var(--cyan)}
+.gcrow{display:flex;gap:6px}
+#gc_in{flex:1;min-width:0;background:var(--bg);border:1px solid var(--line2);color:var(--text);font-family:var(--f-num);font-size:14px;padding:10px;text-transform:uppercase}
+.gcrow .big{width:auto;padding:10px 16px;font-size:12px}
+.big.dscbtn{background:#5865f2;color:#fff;display:flex;align-items:center;justify-content:center;gap:10px}
 #toast{position:absolute;left:50%;bottom:58px;transform:translate(-50%,8px);background:rgba(4,7,13,.94);border:1px solid var(--amber);color:var(--amber);font-family:var(--f-disp);font-weight:600;letter-spacing:.04em;padding:9px 14px;font-size:13px;max-width:calc(100% - 32px);text-align:center;opacity:0;transition:opacity .2s,transform .2s;pointer-events:none;z-index:6}
 #toast.show{opacity:1;transform:translate(-50%,0)}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
@@ -250,6 +260,7 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-acti
     <div class="coins"><span class="lab">CRÉDITS</span><span id="sCr" class="num">0</span></div>
     <div class="mini"><span>TAP <b id="sClick">1</b></span><span>DÉBIT <b id="sDps">0</b>/s</span></div>
     <button class="hbtn" id="dayBtn" aria-label="Coffre et missions du jour"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="9" width="18" height="12"/><path d="M3 13h18M12 9v12M8 9c-2-1-2-5 1-5 2 0 3 5 3 5s1-5 3-5c3 0 3 4 1 5"/></svg><span class="badge" id="bdgDay" hidden>!</span></button>
+    <button class="hbtn snd" id="setBtn" aria-label="Réglages et sauvegarde"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
     <button class="hbtn snd" id="sndBtn" aria-label="Couper le son"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg></button>
   </div>
 
@@ -273,6 +284,27 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-acti
         <label class="toggle" id="autoWrap" hidden><span>Vente automatique</span><input type="checkbox" id="auto"></label>
         <div class="sub">Cartes de minerai · <span id="musCount" class="num" style="letter-spacing:0"></span></div>
         <div id="museum"></div>
+      </div>
+      <div id="pane-reglages" hidden>
+        <div id="clbox" hidden>
+          <div class="sub" style="margin-top:0">Sauvegarde Discord</div>
+          <div class="svrow"><span id="cl_who">Non connecté</span><b id="cl_t">—</b></div>
+          <button class="big dscbtn" id="cl_in" style="margin-top:8px"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M20.3 4.4A19.8 19.8 0 0 0 15.4 3l-.6 1.3a18.4 18.4 0 0 0-5.6 0L8.6 3a19.7 19.7 0 0 0-4.9 1.4C.6 9-.3 13.5.1 18a19.9 19.9 0 0 0 6 3l1.3-2a12.9 12.9 0 0 1-2-1l.5-.4a14.2 14.2 0 0 0 12.2 0l.5.4c-.6.4-1.3.7-2 1l1.3 2a19.8 19.8 0 0 0 6-3c.5-5.2-.8-9.7-3.6-13.6zM8.5 15.3c-1.2 0-2.1-1.1-2.1-2.4s.9-2.4 2.1-2.4 2.2 1.1 2.1 2.4c0 1.3-.9 2.4-2.1 2.4zm7 0c-1.2 0-2.1-1.1-2.1-2.4s.9-2.4 2.1-2.4 2.2 1.1 2.1 2.4c0 1.3-.9 2.4-2.1 2.4z"/></svg>Se connecter avec Discord</button>
+          <div class="btns" id="cl_act" hidden><button class="big alt" id="cl_up">Envoyer</button><button class="big alt" id="cl_down">Récupérer</button><button class="big alt" id="cl_out">Déconnexion</button></div>
+          <div class="svmsg" id="cl_msg" role="status">Connecte-toi pour retrouver ta partie sur tous tes appareils.</div>
+        </div>
+        <div class="sub" id="svTitle">Sauvegarde</div>
+        <div class="svrow"><span>Dernière sauvegarde</span><b id="sv_t">—</b></div>
+        <div class="btns"><button class="big" id="sv_now">Sauvegarder</button><button class="big alt" id="sv_exp">Exporter</button></div>
+        <textarea id="sv_code" rows="3" spellcheck="false" autocomplete="off" aria-label="Code de sauvegarde" placeholder="Code de sauvegarde"></textarea>
+        <div class="btns"><button class="big alt" id="sv_copy">Copier</button><button class="big alt" id="sv_paste">Coller</button><button class="big alt" id="sv_imp">Importer</button></div>
+        <button class="big alt" id="sv_share" style="margin-top:6px" hidden>Partager la sauvegarde</button>
+        <div class="svmsg" id="sv_msg" role="status"></div>
+        <div class="sub">Code cadeau</div>
+        <div class="gcrow"><input id="gc_in" type="text" maxlength="32" spellcheck="false" autocomplete="off" autocapitalize="characters" aria-label="Code cadeau" placeholder="Ex. ETOILE-XXXXX"><button class="big" id="gc_ok">Valider</button></div>
+        <div class="svmsg" id="gc_msg" role="status"></div>
+        <div class="sub">À propos</div>
+        <div class="svrow"><span>Version du jeu</span><b id="sv_ver"></b></div>
         <div class="foot"><span id="resetAsk" hidden>Tout effacer, même les étoiles ?</span><button class="ghost danger" id="resetYes" hidden>Oui, effacer</button><button class="ghost" id="reset">Effacer la sauvegarde</button></div>
       </div>
       <div id="pane-robot" hidden>
@@ -417,6 +449,23 @@ const crysScale=()=>{if(!S)return 1;S.best=Math.max(S.best||0,runDepth()+BAL.crS
 const CARDN=['Bronze','Argent','Or','Platine','Diamant'], CARDC=['#d9894a','#cfd6e6','#ffd23f','#7fe0d6','#c9a8ff'];
 const NORES=WORLDS.reduce((a,w)=>a+w.depth,0);
 const SAVE_KEY='foreuse-solaire-v3';
+const GAME_VERSION='1.4.0', GAME_VER='2026-10-31a';
+const NEWS={t:'Version '+GAME_VERSION,items:[
+ ['Sauvegarde protégée','Ta partie est maintenant encodée et signée : une sauvegarde modifiée à la main est refusée.'],
+ ['Codes de sauvegarde','Exporte un code pour garder ta partie, puis importe-le sur un autre appareil (Réglages, la roue dentée en haut).'],
+ ['Sauvegarde Discord','Connecte-toi avec Discord pour retrouver ta partie sur tous tes appareils.'],
+ ['Codes cadeaux','Entre un code cadeau dans les Réglages pour recevoir des cristaux.'],
+ ['Mises à jour automatiques','Le jeu se met à jour tout seul quand une nouvelle version sort.']]};
+// ===== PROTECTION DES SAUVEGARDES : contenu encodé + signature ; une sauvegarde modifiée à la main est refusée =====
+const _k=(a,x)=>String.fromCharCode(...a.map(c=>c^x));
+const SV_K=_k([83,88,71,88,79,68,82,6,71,88,93,92,64,68,71,79,3,0,11,0,6],55);
+const svH=(t,h)=>{for(let i=0;i<t.length;i++){h^=t.charCodeAt(i);h=Math.imul(h,0x01000193)}h^=h>>>15;h=Math.imul(h,0x2c1b3c6d);h^=h>>>12;h=Math.imul(h,0x297a2d39);h^=h>>>15;return h>>>0};
+const svSig=j=>svH(SV_K+'|'+j,0x811c9dc5).toString(36)+svH(j+'|'+SV_K,0x9e3779b9).toString(36);
+const svEnc=j=>{const u=unescape(encodeURIComponent(j));let o='';for(let i=0;i<u.length;i++)o+=String.fromCharCode(u.charCodeAt(i)^SV_K.charCodeAt(i%SV_K.length));return btoa(o)};
+const svDec=b=>{const u=atob(b);let o='';for(let i=0;i<u.length;i++)o+=String.fromCharCode(u.charCodeAt(i)^SV_K.charCodeAt(i%SV_K.length));try{return decodeURIComponent(escape(o))}catch(e){return o}};
+const svPack=j=>svEnc(j)+'.'+svSig(j);
+const svUnpack=t=>{const m=String(t).match(/^([A-Za-z0-9+\/=]+)\.([a-z0-9]+)$/);if(!m)return null;let j;try{j=svDec(m[1])}catch(e){return null}if(svSig(j)!==m[2])return null;try{const o=JSON.parse(j);return o&&typeof o==='object'?o:null}catch(e){return null}};
+let SAVE_TAMPERED=false, lastSave=0;
 const BAL={hpA:1.7,hpB:1.002,hpCap:999,valG:1.38,needB:12,needP:4,needE:1,moonNeed:15,
   crA:0.005,bossM:5,bossT:45,crP:3,dayScale:0.02,crSys:24,crysM:0.02,sysDmg:10,sysHp:3000,sysVal:1000,offCap:8,
   drillC:10,drillG:1.15,droneC:40,droneG:1.16,laserC:5000,laserG:10,rafC:1000,rafG:3,scanC:10000,scanG:6,critC:1500,critG:2.8,
@@ -485,7 +534,7 @@ function fresh(){return{cr:0,earned:0,p:0,e:0,maxP:0,unl:WORLDS.map((_,i)=>i===0
   hp:10,rare:false,inv:{},up:{drill:0,drone:0,laser:0,raf:0,scan:0,crit:0,auto:0},autoOn:true,
   crys:0,crysTotal:0,tal:{depart:0,essaim:0,prosp:0,aimant:0,moteur:0},ach:[],moonDone:[],
   ships:['navette'],ship:'navette',drills:['std'],drillSkin:'std',
-  sdr:[],museum:[],bot:{xp:0,lvl:1,skin:'bip'},cards:{},buyQty:1,autoAdv:false,daily:{last:'',streak:0},missions:null,boss:null,bossBeat:[],sound:true,
+  sdr:[],museum:[],codes:[],seenVer:'',bot:{xp:0,lvl:1,skin:'bip'},cards:{},buyQty:1,autoAdv:false,daily:{last:'',streak:0},missions:null,boss:null,bossBeat:[],sound:true,
   sys:0,best:0,bossFail:{},res:{alliage:0,logis:0,ia:0,carto:0,propu:0},lab:null,bhScores:[],bhDay:'',
   st:{blocks:0,taps:0,ast:0,hyper:0,rare:0,buys:0,boss:0,halley:0,jump:0},reachedP:0,t:Date.now()}}
 let S=fresh();
@@ -703,7 +752,7 @@ let hyperArmed=false, jumpArmed=false;
 function resetRun(){
   const keep={crys:S.crys,crysTotal:S.crysTotal,tal:S.tal,ach:S.ach,st:S.st,autoOn:S.autoOn,reachedP:S.reachedP,
     moonDone:S.moonDone,ships:S.ships,ship:S.ship,drills:S.drills,drillSkin:S.drillSkin,
-    sdr:S.sdr,museum:S.museum,bot:S.bot,cards:S.cards,buyQty:S.buyQty,autoAdv:S.autoAdv,daily:S.daily,missions:S.missions,bossBeat:S.bossBeat,sound:S.sound,
+    sdr:S.sdr,museum:S.museum,codes:S.codes,seenVer:S.seenVer,bot:S.bot,cards:S.cards,buyQty:S.buyQty,autoAdv:S.autoAdv,daily:S.daily,missions:S.missions,bossBeat:S.bossBeat,sound:S.sound,
     sys:S.sys,best:S.best,bossFail:S.bossFail,res:S.res,lab:S.lab,bhScores:S.bhScores,bhDay:S.bhDay};
   bossWarned={};
   const auto=S.up.auto;
@@ -770,15 +819,23 @@ function catchAst(){
 }
 
 /* ---------- sauvegarde ---------- */
-function save(){S.t=Date.now();try{localStorage.setItem(SAVE_KEY,JSON.stringify(S))}catch(_){}}
+function save(){S.t=Date.now();try{localStorage.setItem(SAVE_KEY,'F1:'+svPack(JSON.stringify(S)));lastSave=Date.now();return true}catch(_){return false}}
+function applyState(d){
+  if(!(d&&d.up))return false;
+  const f=fresh(), g=fresh();S=Object.assign(f,d);
+  for(const k of ['up','tal','st','daily','res','bot'])S[k]=Object.assign(g[k],d[k]||{});
+  for(const k of ['unl','prog','cleared','moonOpen']){const a=S[k]||[];for(let i=a.length;i<NW;i++)a.push(g[k][i]);S[k]=a}
+  if(!Array.isArray(S.codes))S.codes=[];
+  return true;
+}
 function load(data){
   let d=data;
-  if(!d){try{d=JSON.parse(localStorage.getItem(SAVE_KEY)||'null')}catch(_){d=null}}
-  if(d&&d.up){
-    const f=fresh(), g=fresh();S=Object.assign(f,d);
-    for(const k of ['up','tal','st','daily','res','bot'])S[k]=Object.assign(g[k],d[k]||{});
-    for(const k of ['unl','prog','cleared','moonOpen']){const a=S[k]||[];for(let i=a.length;i<NW;i++)a.push(g[k][i]);S[k]=a}
+  if(!d){
+    let r=null;try{r=localStorage.getItem(SAVE_KEY)}catch(_){}
+    if(r&&r.startsWith('F1:')){d=svUnpack(r.slice(3));if(!d){SAVE_TAMPERED=true;try{localStorage.setItem(SAVE_KEY+'_refusee',r)}catch(_){}}}
+    else if(r){try{d=JSON.parse(r)}catch(_){d=null}try{if(d&&!localStorage.getItem(SAVE_KEY+'_avant_signature'))localStorage.setItem(SAVE_KEY+'_avant_signature',r)}catch(_){}}
   }
+  applyState(d);
   S.boss=null; cardsVer++;
   const away=Math.min((Date.now()-(S.t||Date.now()))/1000,BAL.offCap*3600);
   if(away>60&&dps()>0){
@@ -795,7 +852,7 @@ function load(data){
 const $=id=>document.getElementById(id);
 let botDirty=true, dirty=true, achDirty=true, dayDirty=true, musDirty=true, labDirty=true, bhDirty=true, quiet=false, tab=null, bossWarned={}, chestShown=false;
 function toast(m){if(quiet)return;const t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('show'),2600)}
-const TITLES={robot:'Robot compagnon',atelier:'Atelier',labo:'Laboratoire',planetes:'Système solaire',soute:'Soute',etoiles:'Étoiles',jour:'Aujourd’hui'};
+const TITLES={reglages:'Réglages',robot:'Robot compagnon',atelier:'Atelier',labo:'Laboratoire',planetes:'Système solaire',soute:'Soute',etoiles:'Étoiles',jour:'Aujourd’hui'};
 function openTab(t){
   tab=(t===tab)?null:t; hyperArmed=false; if(tab==='robot')botDirty=true; jumpArmed=false; if(tab==='labo')labDirty=true; if(tab==='jour'){checkDay();dayDirty=true}
   document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('on',b.dataset.t===tab));
@@ -824,6 +881,23 @@ function buildStatic(){
   $('sndBtn').onclick=()=>{S.sound=!S.sound;$('sndBtn').classList.toggle('off',!S.sound);$('sndBtn').setAttribute('aria-label',S.sound?'Couper le son':'Activer le son');if(S.sound)SFX.buy()};
   $('sndBtn').classList.toggle('off',!S.sound);
   $('bossBtn').onclick=startBoss;
+  $('setBtn').onclick=()=>openTab('reglages');
+  $('sv_ver').textContent='v'+GAME_VERSION;
+  $('sv_now').onclick=()=>svMsg(save()?'Partie sauvegardée.':'Impossible de sauvegarder dans ce navigateur : exporte un code pour garder ta partie.');
+  $('sv_exp').onclick=async()=>{const c=makeCode(),t=$('sv_code');t.value=c;const ok=await copyText(c,t);
+    svMsg(ok?'Code exporté et copié. Garde-le dans tes notes.':'Code généré : copie-le ou partage-le pour le garder.')};
+  if(navigator.share)$('sv_share').hidden=false;
+  $('sv_share').onclick=async()=>{const c=$('sv_code').value.trim()||makeCode();$('sv_code').value=c;
+    try{await navigator.share({title:'Sauvegarde Foreuse Solaire',text:c})}catch(e){svMsg('Partage indisponible : utilise Copier.')}};
+  $('sv_copy').onclick=async()=>{const t=$('sv_code');if(!t.value.trim()){svMsg('Génère d’abord un code avec « Exporter ».');return}
+    svMsg(await copyText(t.value,t)?'Code copié.':'Copie automatique impossible : le code est sélectionné, copie-le à la main.')};
+  $('sv_paste').onclick=async()=>{try{const t=await navigator.clipboard.readText();if(!t)throw 0;$('sv_code').value=t.trim();svMsg('Code collé. Touche « Importer ».')}
+    catch(e){$('sv_code').focus();svMsg('Colle le code à la main dans la zone, puis touche « Importer ».')}};
+  $('sv_imp').onclick=()=>{const r=parseSave($('sv_code').value);if(r.err){svMsg(r.err);return}
+    showModal({title:'Importer cette sauvegarde ?',body:`<p>Ta partie actuelle sera remplacée par celle du code : ${saveDesc(r.o)}.</p>`,
+      btns:[{label:'Importer',fn:()=>{importState(r.o);openTab(null);$('sv_code').value='';toast('Sauvegarde importée : '+saveDesc(S))}},{label:'Annuler',cls:'alt'}]})};
+  $('gc_ok').onclick=redeemCode;$('gc_in').addEventListener('keydown',e=>{if(e.key==='Enter')redeemCode()});
+  $('cl_in').onclick=clLogin;$('cl_up').onclick=clSend;$('cl_down').onclick=clDownload;$('cl_out').onclick=clLogout;
   $('botOpen').onclick=()=>openTab('robot');
   $('botSkins').onclick=ev=>{const b=ev.target.closest('button[data-s]');if(!b||b.disabled)return;S.bot.skin=b.dataset.s;botDirty=true;SFX.buy();botSay('Nouvelle peinture, j’adore !',2.5)};
   $('jump').onclick=jump;
@@ -840,6 +914,155 @@ function buildStatic(){
   $('auto').onchange=e=>{S.autoOn=e.target.checked};
   $('reset').onclick=askReset;
   $('resetYes').onclick=()=>{S=fresh();save();cancelReset();initWx(0);dirty=true;achDirty=true;openTab(null);toast('Nouvelle partie !')};
+}
+/* ===== codes de sauvegarde ===== */
+function svMsg(t){$('sv_msg').textContent=t;clearTimeout(svMsg.t);svMsg.t=setTimeout(()=>$('sv_msg').textContent='',7000)}
+const makeCode=()=>{save();return 'FOREUSE1:'+svPack(JSON.stringify(S))};
+const saveDesc=o=>{const D=Math.max(0,o.maxP|0),w=ORDER[Math.min(D,ORDER.length-1)];return `${(WORLDS[w]||WORLDS[0]).n}${o.sys?' · système '+(o.sys+1):''}, ${fmt(o.crysTotal||0)} cristaux`};
+function parseSave(text){
+  const t=String(text||'').replace(/[\u200B-\u200D\uFEFF]/g,'').trim();
+  if(!t)return{err:'La zone est vide : colle d’abord ton code.'};
+  const m=t.replace(/\s+/g,'').match(/FOREUSE1[:：]([A-Za-z0-9+\/=]+\.[a-z0-9]+)/i);
+  if(!m)return{err:'Ce n’est pas un code de sauvegarde Foreuse Solaire.'};
+  const o=svUnpack(m[1]);
+  if(!o||!o.up||typeof o.up!=='object')return{err:'Ce code a été modifié ou est incomplet : il ne peut pas être importé.'};
+  return{o};
+}
+function importState(o){
+  applyState(o);S.t=Date.now();S.boss=null;bh=null;boostT=0;flareT=0;parts=[];
+  cardsVer++;initWx(S.p);dirty=true;achDirty=true;musDirty=true;botDirty=true;labDirty=true;dayDirty=true;
+  save();
+}
+async function copyText(t,el){
+  try{await navigator.clipboard.writeText(t);return true}catch(_){}
+  if(el){el.focus();el.select()}
+  try{return document.execCommand('copy')}catch(_){return false}
+}
+/* ===== codes cadeaux : MOT-XXXXX, signés ===== */
+const GC_A='ABCDEFGHJKLMNPQRSTUVWXYZ23456789',GC_K=_k([65,92,75,90,77,75,90,3,93,71,68,65,93,73,65,90,77,3,22,20],40);
+function gcHash(t){let h=0x811c9dc5;for(let i=0;i<t.length;i++){h^=t.charCodeAt(i);h=Math.imul(h,0x01000193)}h^=h>>>15;h=Math.imul(h,0x2c1b3c6d);h^=h>>>12;return h>>>0}
+const gcWord=w=>String(w||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase().replace(/[^A-Z0-9]/g,'');
+function gcRead(raw){
+  const m=String(raw||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase().replace(/\s+/g,'').match(/^(.+)-([A-Z0-9]{5})$/);if(!m)return null;
+  const w=gcWord(m[1]);if(w.length<3||w.length>16)return null;
+  let bits='';for(const ch of m[2]){const i=GC_A.indexOf(ch);if(i<0)return null;bits+=i.toString(2).padStart(5,'0')}
+  const n=parseInt(bits.slice(0,6),2),chk=parseInt(bits.slice(6),2);
+  if(n<1)return null;
+  if(chk===(gcHash(GC_K+':c:'+w+':'+n)&0x7ffff))return{n,id:'c:'+w+':'+n};
+  return null;
+}
+function redeemCode(){
+  const inp=$('gc_in'),out=t=>{$('gc_msg').textContent=t},r=gcRead(inp.value);
+  if(!r){out(inp.value.trim()?'Code invalide.':'Entre un code cadeau.');return}
+  if(S.codes.includes(r.id)){out('Ce code a déjà été utilisé.');return}
+  const g=r.n*10*crysScale();
+  S.codes.push(r.id);S.crys+=g;inp.value='';save();SFX.win();
+  out(`+${fmt(g)} cristaux reçus !`);toast(`Code cadeau : +${fmt(g)} cristaux`);
+}
+/* ===== sauvegarde Discord (Supabase, comme The Warrior) ===== */
+const ON_SITE=/^https?:$/.test(location.protocol)&&/github\.io$/.test(location.hostname);
+const CLOUD_URL='https://qptwgdqqnitygrapvsbk.supabase.co',CLOUD_KEY='sb_publishable_v4OUM_s2Hq_lih70_cEYPw_SWzuUdOm';
+const CLOUD_SLOT='foreuse-solaire',CLOUD_EVERY=60000,CLOUD_LIB='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4/dist/umd/supabase.min.js';
+let SB=null,clUser=null,clBusy=false,clPaused=false,clLastUp=0;
+const clKey=SAVE_KEY+'_cloud';
+const clGet=()=>{try{return JSON.parse(localStorage.getItem(clKey)||'{}')}catch(e){return {}}};
+const clSet=o=>{try{localStorage.setItem(clKey,JSON.stringify(Object.assign(clGet(),o)))}catch(e){}};
+function clMsg(m){const e=$('cl_msg');if(e)e.textContent=m}
+const clName=u=>{const m=(u&&u.user_metadata)||{};return m.custom_claims&&m.custom_claims.global_name||m.full_name||m.name||m.user_name||'Joueur Discord'};
+const clDate=t=>{if(!t)return '—';const d=new Date(+t);return d.toLocaleDateString('fr-FR',{day:'numeric',month:'short'})+' '+d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})};
+function clLib(){return new Promise((ok,ko)=>{if(window.supabase&&window.supabase.createClient)return ok(window.supabase);const s=document.createElement('script');s.src=CLOUD_LIB;s.async=true;s.onload=()=>window.supabase?ok(window.supabase):ko(new Error('lib'));s.onerror=()=>ko(new Error('lib'));document.head.appendChild(s)})}
+async function clInit(){
+  if(SB)return SB;const lib=await clLib();
+  SB=lib.createClient(CLOUD_URL,CLOUD_KEY,{auth:{flowType:'pkce',persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,storageKey:'foreuse-cloud-auth'}});
+  SB.auth.onAuthStateChange((ev,ses)=>{const u=ses&&ses.user||null;const was=clUser&&clUser.id;clUser=u;clRender();if(u&&u.id!==was)setTimeout(clCheck,0)});
+  return SB;
+}
+function clRender(){
+  const box=$('clbox');if(!box)return;box.hidden=!ON_SITE;
+  $('svTitle').style.marginTop=ON_SITE?'':'0';
+  $('cl_in').hidden=!!clUser;$('cl_act').hidden=!clUser;
+  $('cl_who').textContent=clUser?'Connecté : '+clName(clUser):'Non connecté';
+  $('cl_t').textContent=clUser?(clGet().t?'envoyée '+clDate(clGet().at||clGet().t):'—'):'—';
+}
+async function clLogin(){
+  try{clMsg('Ouverture de Discord…');await clInit();save();
+    const back=location.href.split('#')[0].split('?')[0];
+    const {error}=await SB.auth.signInWithOAuth({provider:'discord',options:{redirectTo:back,scopes:'identify'}});
+    if(error)throw error;
+  }catch(e){clMsg('Connexion impossible pour l’instant : vérifie ta connexion internet.')}
+}
+async function clFetch(){const {data,error}=await SB.from('saves').select('data,stage,best,t,updated_at').eq('user_id',clUser.id).eq('slot',CLOUD_SLOT).maybeSingle();if(error)throw error;return data}
+async function clUpload(force){
+  if(!clUser||clBusy||(clPaused&&!force))return false;clBusy=true;
+  try{
+    if(!force){const cur=await clFetch(),mem=clGet();if(cur&&!(mem.uid===clUser.id&&+cur.t===+mem.t)){clBusy=false;clPaused=true;clCheck();return false}}
+    const code=makeCode();
+    const row={user_id:clUser.id,slot:CLOUD_SLOT,data:code,stage:runDepth()|0,best:(S.best||0)|0,t:S.t,name:clName(clUser).slice(0,40),updated_at:new Date().toISOString()};
+    const {error}=await SB.from('saves').upsert(row,{onConflict:'user_id,slot'});if(error)throw error;
+    clSet({t:S.t,at:Date.now(),uid:clUser.id});clLastUp=Date.now();clBusy=false;clRender();return true;
+  }catch(e){clBusy=false;clMsg('Sauvegarde Discord injoignable pour l’instant.');return false}
+}
+const clUsed=row=>{const m=clGet();return m.uid===clUser.id&&(m.used||[]).includes(+row.t)};
+function clRestore(row){
+  if(clUsed(row)){clMsg('Cette sauvegarde a déjà été récupérée : impossible de revenir dessus.');return false}
+  const r=parseSave(row.data);if(r.err||!r.o){clMsg('La partie Discord est illisible : elle n’a pas été chargée.');return false}
+  importState(r.o);{const m=clGet(),u=(m.uid===clUser.id&&m.used||[]).concat(+row.t).slice(-50);clSet({t:+row.t,at:Date.now(),uid:clUser.id,used:u})}
+  setTimeout(()=>clUpload(true),1500);clPaused=false;clRender();clMsg('Partie Discord récupérée : '+saveDesc(S)+'.');return true;
+}
+async function clCheck(){
+  if(!clUser)return;
+  try{
+    const row=await clFetch(),mem=clGet();
+    if(!row){await clUpload(true);clMsg('Ta partie est maintenant liée à ton compte Discord.');return}
+    const same=mem.uid===clUser.id&&+row.t===+mem.t;
+    if(same||+row.t===+S.t){await clUpload(true);clMsg('Partie synchronisée avec Discord.');return}
+    clPaused=true;
+    const isNew=S.sys===0&&S.maxP===0&&S.st.hyper===0&&S.st.blocks<300;
+    if(isNew&&!clUsed(row)){clRestore(row);return}
+    const r=parseSave(row.data);
+    showModal({title:'Deux parties trouvées',body:`<p>Ta partie Discord (${r.o?saveDesc(r.o):'illisible'}, ${clDate(row.t)}) est différente de celle de cet appareil (${saveDesc(S)}).</p><p>Laquelle veux-tu garder ?</p>`,
+      btns:[{label:'Récupérer la partie Discord',dis:!r.o||clUsed(row),fn:()=>clRestore(row)},{label:'Garder cet appareil',cls:'alt',fn:()=>{clUpload(true).then(ok=>{if(ok){clPaused=false;clMsg('La partie de cet appareil a été envoyée sur Discord.')}})}}]});
+  }catch(e){clMsg('Sauvegarde Discord injoignable pour l’instant.')}
+}
+async function clDownload(){
+  if(!clUser)return;try{const row=await clFetch();if(!row){clMsg('Aucune partie Discord pour l’instant : touche « Envoyer ».');return}
+    if(clUsed(row)){clMsg('Ta partie Discord est déjà celle de cet appareil.');return}
+    const r=parseSave(row.data);
+    showModal({title:'Récupérer la partie Discord ?',body:`<p>${r.o?saveDesc(r.o):'Partie illisible'}, ${clDate(row.t)}.</p><p>Elle remplacera la partie de cet appareil (${saveDesc(S)}).</p>`,btns:[{label:'Récupérer',dis:!r.o,fn:()=>clRestore(row)},{label:'Annuler',cls:'alt'}]})}
+  catch(e){clMsg('Sauvegarde Discord injoignable pour l’instant.')}
+}
+function clSend(){if(!clUser)return;
+  if(clPaused){showModal({title:'Envoyer cette partie ?',body:`<p>La partie Discord sera remplacée par celle de cet appareil (${saveDesc(S)}).</p>`,btns:[{label:'Envoyer',fn:async()=>{if(await clUpload(true)){clPaused=false;clMsg('Partie envoyée sur Discord.')}}},{label:'Annuler',cls:'alt'}]});return}
+  clUpload(true).then(ok=>ok&&clMsg('Partie envoyée sur Discord.'))}
+async function clLogout(){try{await clInit();await SB.auth.signOut()}catch(e){}clUser=null;clPaused=false;clRender();clMsg('Déconnecté. Ta partie reste sur cet appareil.')}
+function clBoot(){
+  clRender();if(!ON_SITE)return;
+  let had=false;try{had=!!localStorage.getItem('foreuse-cloud-auth')}catch(e){}
+  const back=/[?&]code=|access_token=/.test(location.href);
+  setInterval(()=>{if(clUser&&Date.now()-clLastUp>=CLOUD_EVERY-1000)clUpload(false)},CLOUD_EVERY);
+  document.addEventListener('visibilitychange',()=>{if(document.hidden&&clUser)clUpload(false)});
+  if(!had&&!back)return;
+  clInit().then(async()=>{await SB.auth.getSession();if(back)try{history.replaceState(null,'',location.href.split('#')[0].split('?')[0])}catch(e){}clRender()}).catch(()=>{});
+}
+/* ===== mises à jour automatiques (version.json publié à côté du jeu) ===== */
+let updT=0;
+function checkUpdate(){
+  if(!ON_SITE)return;
+  const n=Date.now();if(n-updT<20000)return;updT=n;
+  fetch('version.json?t='+n,{cache:'no-store'}).then(r=>r.ok?r.json():null).then(j=>{
+    if(!j||!j.ver||j.ver===GAME_VER)return;
+    let tried='';try{tried=sessionStorage.getItem('fs_upd')||''}catch(e){}
+    if(tried===j.ver)return;
+    try{sessionStorage.setItem('fs_upd',j.ver)}catch(e){}
+    save();toast('Nouvelle version disponible : mise à jour du jeu…');
+    setTimeout(()=>{save();location.replace(location.pathname+'?v='+encodeURIComponent(j.ver))},1500);
+  }).catch(()=>{});
+}
+function checkNews(){
+  if(S.seenVer===GAME_VER)return;
+  const veteran=S.st.blocks>50;S.seenVer=GAME_VER;save();
+  if(!veteran)return;
+  showModal({title:'Nouveautés',body:`<p style="color:var(--muted)">${NEWS.t}</p><ul style="text-align:left;margin:0;padding-left:18px;display:flex;flex-direction:column;gap:8px">${NEWS.items.map(x=>`<li><b style="color:var(--cyan)">${x[0]}</b><br><span style="color:var(--muted);font-size:13px">${x[1]}</span></li>`).join('')}</ul>`,btns:[{label:'Jouer !'}]});
 }
 function askReset(){$('resetAsk').hidden=false;$('resetYes').hidden=false;$('reset').textContent='Annuler';$('reset').onclick=cancelReset}
 function cancelReset(){$('resetAsk').hidden=true;$('resetYes').hidden=true;$('reset').textContent='Effacer la sauvegarde';$('reset').onclick=askReset}
@@ -928,6 +1151,10 @@ function render(){
         return `<div class="mu${ok?'':' no'}"${t?` style="box-shadow:inset 0 0 0 2px ${CARDC[t-1]}"`:''}><i style="background:${o[1]}"></i><span><span class="mn">${ok?o[0]:'???'}</span><small>${ok?(t?CARDN[t-1]:'—')+(nx?` · ${fmt(n)}/${fmt(nx)}`:' · max'):''}</small></span></div>`}).join('')}</div></div>`).join('')}</div>`;
       musDirty=false;
     }
+  }
+  if(tab==='reglages'){
+    const sec=Math.floor((Date.now()-lastSave)/1000);
+    $('sv_t').textContent=!lastSave?'—':sec<5?'à l’instant':sec<60?'il y a '+sec+' s':'il y a '+Math.floor(sec/60)+' min';
   }
   if(tab==='robot'){
     const b=S.bot, sk=BOT_SKINS.find(s=>s.k===b.skin)||BOT_SKINS[0], need=botNeed(b.lvl);
@@ -1345,7 +1572,14 @@ function start(data){
     requestAnimationFrame(frame);
   }
   requestAnimationFrame(frame);
-  document.addEventListener('visibilitychange',()=>{if(document.hidden)save()});
+  document.addEventListener('visibilitychange',()=>{if(document.hidden)save();else checkUpdate()});
+  addEventListener('pagehide',save);
+  clBoot();
+  setTimeout(checkUpdate,6000);setInterval(checkUpdate,120000);
+  setTimeout(()=>{
+    if(SAVE_TAMPERED){SAVE_TAMPERED=false;showModal({title:'Sauvegarde refusée',body:'<p>Cette sauvegarde a été modifiée en dehors du jeu : elle ne peut pas être chargée. Une nouvelle partie a démarré.</p><p style="color:var(--muted);font-size:13px">Astuce : importe un code de sauvegarde depuis les Réglages.</p>',btns:[{label:'Compris'}]})}
+    checkNews();
+  },700);
 }
 window.claude?.hot?.snapshot?.(()=>({state:S}));
 if(!window.__SIM){window.claude?.hot?.snapshot?.(()=>({state:S}));window.claude?.hot?.ready ? window.claude.hot.ready(start) : start(window.claude?.hot?.data ?? {});}
