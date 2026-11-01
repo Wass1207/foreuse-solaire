@@ -272,6 +272,31 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-acti
 .chip.on{border-color:var(--mint);color:var(--mint);background:#072018}
 .chip:disabled{opacity:.4;cursor:default}
 .mini .mnv b{color:var(--mn)}
+button.coins{border:0;background:transparent;color:inherit;text-align:left;padding:0;font:inherit}
+.coins .chev{display:inline-block;width:6px;height:6px;border-right:1.5px solid var(--muted);border-bottom:1.5px solid var(--muted);transform:rotate(45deg);margin:0 0 3px 4px;transition:transform .15s}
+.coins[aria-expanded="true"] .chev{transform:rotate(-135deg);margin-bottom:-1px}
+.cart{position:absolute;left:14px;right:14px;top:66px;z-index:8;background:rgba(7,13,24,.97);border:1px solid var(--line2);padding:4px 12px;box-shadow:0 12px 30px rgba(0,0,0,.6)}
+.cart .svrow:last-child{border-bottom:0}
+.cart .svrow b.c{color:var(--amber)}.cart .svrow b.k{color:var(--violet)}.cart .svrow b.m{color:var(--mn)}.cart .svrow b.h{color:var(--cyan)}
+.ttl{display:flex;align-items:center;gap:8px;min-width:0}
+.back{width:40px;height:40px;border:1px solid var(--line);background:var(--panel2);color:var(--text);display:grid;place-items:center;flex:none}
+.tab.menu{color:var(--text)}
+.tab.menu svg{color:var(--cyan)}
+.tab.lockd{color:var(--dim)}
+.mgrp{font-family:var(--f-disp);font-size:10px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin:16px 0 6px}
+.mgrp:first-child{margin-top:0}
+.mgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.mod{position:relative;border:1px solid var(--line);background:var(--panel2);color:var(--text);padding:12px 4px 10px;display:flex;flex-direction:column;align-items:center;gap:6px;min-height:88px}
+.mod svg{width:24px;height:24px;color:var(--cyan)}
+.mod b{font-family:var(--f-disp);font-weight:600;font-size:11px;letter-spacing:.1em;text-transform:uppercase;text-align:center}
+.mod small{font-family:var(--f-num);font-size:9px;color:var(--muted);text-align:center;line-height:1.3;min-height:12px}
+.mod.go{border-color:var(--mint)}
+.mod.go small{color:var(--mint)}
+.mod.on{border-color:var(--cyan);background:var(--cyan-bg)}
+.mod:disabled{border-style:dashed;background:transparent;color:var(--dim);cursor:default}
+.mod:disabled svg{color:var(--dim)}
+.mod .new{position:absolute;top:-1px;left:-1px;background:var(--mint);color:#063d22;font-family:var(--f-num);font-size:8px;font-weight:600;padding:1px 4px}
+.mod .bdg{position:absolute;top:4px;right:4px;background:var(--amber);color:var(--amber-ink);font-family:var(--f-num);font-size:9px;font-weight:600;padding:0 4px;line-height:14px}
 #toast{position:absolute;left:50%;bottom:58px;transform:translate(-50%,8px);background:rgba(4,7,13,.94);border:1px solid var(--amber);color:var(--amber);font-family:var(--f-disp);font-weight:600;letter-spacing:.04em;padding:9px 14px;font-size:13px;max-width:calc(100% - 32px);text-align:center;opacity:0;transition:opacity .2s,transform .2s;pointer-events:none;z-index:6}
 #toast.show{opacity:1;transform:translate(-50%,0)}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
@@ -282,13 +307,14 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-acti
 
 <div class="app">
   <div class="hud">
-    <div class="coins"><span class="lab">CRÉDITS</span><span id="sCr" class="num">0</span></div>
-    <div class="mini"><span>TAP <b id="sClick">1</b></span><span>DÉBIT <b id="sDps">0</b>/s</span><span class="mnv">M.N. <b id="sMn">0</b></span></div>
+    <button class="coins" id="coins" aria-expanded="false" aria-controls="cart"><span class="lab">CRÉDITS <i class="chev"></i></span><span id="sCr" class="num">0</span></button>
+    <div class="mini"><span>TAP <b id="sClick">1</b></span><span>DÉBIT <b id="sDps">0</b>/s</span></div>
     <button class="hbtn" id="dayBtn" aria-label="Coffre et missions du jour"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="9" width="18" height="12"/><path d="M3 13h18M12 9v12M8 9c-2-1-2-5 1-5 2 0 3 5 3 5s1-5 3-5c3 0 3 4 1 5"/></svg><span class="badge" id="bdgDay" hidden>!</span></button>
     <button class="hbtn snd" id="setBtn" aria-label="Réglages et sauvegarde"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
     <button class="hbtn snd" id="sndBtn" aria-label="Couper le son"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg></button>
   </div>
 
+  <div class="cart" id="cart" hidden></div>
   <div class="stage" id="stage">
     <canvas id="cv" aria-label="Coupe de la planète, touche pour forer"></canvas>
     <div class="ptag"><h1 id="pname">Mercure</h1><small id="pua"></small></div>
@@ -299,7 +325,7 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-acti
     <div id="toast" role="status"></div>
 
     <div class="sheet" id="sheet">
-      <h2><span id="sheetTitle"></span><button class="x" id="close" aria-label="Fermer"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg></button></h2>
+      <h2><span class="ttl"><button class="back" id="back" hidden aria-label="Retour au menu"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button><span id="sheetTitle"></span></span><button class="x" id="close" aria-label="Fermer"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg></button></h2>
       <div id="pane-atelier" hidden><div class="qty" id="qty" role="group" aria-label="Quantité à acheter"><button data-q="1">×1</button><button data-q="10">×10</button><button data-q="25">×25</button><button data-q="max">MAX</button></div><div class="list" id="ups"></div></div>
       <div id="pane-planetes" hidden><div class="pgrid" id="planets"></div><div style="height:12px"></div><button class="big" id="travel"></button>
         <div class="sub">Lunes</div><div class="pgrid" id="moons"></div></div>
@@ -307,9 +333,32 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-acti
         <div class="inv" id="inv"></div>
         <button class="big" id="sell">Vendre tout</button>
         <label class="toggle" id="autoWrap" hidden><span>Vente automatique</span><input type="checkbox" id="auto"></label>
-        <div class="sub">Cartes de minerai · <span id="musCount" class="num" style="letter-spacing:0"></span></div>
+      </div>
+      <div id="pane-menu" hidden><div id="menuGrid"></div></div>
+      <div id="pane-cartes" hidden>
+        <div class="sub" style="margin-top:0">Paliers · <span id="musCount" class="num" style="letter-spacing:0"></span></div>
         <div id="museum"></div>
       </div>
+      <div id="pane-trounoir" hidden>
+                <div class="bhcard" id="bhCard"></div>
+      </div>
+      <div id="pane-hangar" hidden>
+        <div class="sub" style="margin-top:0">Vaisseaux</div>
+        <div class="list" id="ships"></div>
+        <div class="sub">Foreuses</div>
+        <div class="list" id="drills"></div>
+        <div class="sub">Drones spéciaux</div>
+        <div class="list" id="sdrones"></div>
+      </div>
+      <div id="pane-talents" hidden>
+        <p class="cardhelp">Les talents s’achètent avec les cristaux de l’Hyperespace et sont gardés pour toujours.</p>
+        <div class="list" id="talents"></div>
+      </div>
+      <div id="pane-succes" hidden>
+        <div class="sub" style="margin-top:0">Bonus · <span id="achCount" class="num" style="letter-spacing:0"></span></div>
+        <div class="achs" id="achs"></div>
+      </div>
+      <div id="pane-stats" hidden><div id="statsList"></div></div>
       <div id="pane-arsenal" hidden>
         <div class="mnbox"><div class="v"><i></i><span id="mnVal">0</span></div><small>La matière noire vient des charges, du coffre du jour, des missions, du trou noir, de la comète et des codes cadeaux. Elle paie l’arsenal, le hangar et les raccourcis. Elle n’est jamais perdue, même après l’Hyperespace.</small></div>
         <div class="sub" style="margin-top:0">Charges</div>
@@ -358,27 +407,14 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-acti
         <div class="chest" id="chest"></div>
         <div class="sub">Missions du jour</div>
         <div class="list" id="missions"></div>
-        <div class="sub">Défi du trou noir</div>
-        <div class="bhcard" id="bhCard"></div>
       </div>
-      <div id="pane-etoiles" hidden>
+      <div id="pane-hyper" hidden>
         <div class="stars">
           <div class="row"><span class="crys"><i class="gemv"></i><span id="crys" class="num">0</span></span><small id="mult" style="text-align:right"></small></div>
           <small>L'Hyperespace te renvoie sur Mercure avec des cristaux stellaires. Plus tu es allé profond, plus tu gagnes de cristaux. Chaque cristal donne <span id="crysPct">+5 %</span> de dégâts et de valeur pour toujours, et les cristaux achètent les talents. Tu gardes tes talents, ta matière noire, tes succès et la vente auto.</small>
           <button class="big hyper" id="hyper"></button>
         </div>
         <div class="stars sys"><div class="row"><span class="crys" id="sysName"></span><small id="sysMul" style="text-align:right"></small></div><small id="sysRule"></small><small>Le saut stellaire t'emmène dans un autre système : tout devient 10× plus puissant et une nouvelle règle s'applique. Tu gardes tout ce qui est permanent.</small><button class="big hyper" id="jump"></button></div>
-        <button class="big alt" id="botOpen" style="margin-bottom:12px">Robot compagnon</button>
-        <div class="sub">Hangar · vaisseaux</div>
-        <div class="list" id="ships"></div>
-        <div class="sub">Hangar · foreuses</div>
-        <div class="list" id="drills"></div>
-        <div class="sub">Hangar · drones spéciaux</div>
-        <div class="list" id="sdrones"></div>
-        <div class="sub">Talents</div>
-        <div class="list" id="talents"></div>
-        <div class="sub">Succès · <span id="achCount" class="num" style="letter-spacing:0"></span></div>
-        <div class="achs" id="achs"></div>
       </div>
     </div>
   </div>
@@ -392,11 +428,12 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-acti
   <div class="modal" id="modal" hidden><div class="mbox" role="dialog" aria-modal="true" aria-labelledby="mTitle"><h3 id="mTitle"></h3><div id="mBody"></div><div class="mbtns" id="mBtns"></div></div></div>
   <nav class="tabs">
     <button class="tab" data-t="atelier"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4a5 5 0 0 0 6 6l-9 9a2.1 2.1 0 0 1-3-3z"/></svg>Atelier<span class="badge" id="bdgUp" hidden></span></button>
-    <button class="tab" data-t="labo"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3h6M10 3v6l-5 10a1.5 1.5 0 0 0 1.3 2h11.4a1.5 1.5 0 0 0 1.3-2L14 9V3"/><path d="M7 15h10"/></svg>Labo<span class="badge" id="bdgLab" hidden>!</span></button>
     <button class="tab" data-t="planetes"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="6"/><ellipse cx="12" cy="12" rx="11" ry="3.5" transform="rotate(-20 12 12)"/></svg>Planètes<span class="badge" id="bdgPl" hidden>!</span></button>
-    <button class="tab" data-t="soute"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8l9-5 9 5v8l-9 5-9-5z"/><path d="M3 8l9 5 9-5M12 13v8"/></svg>Soute<span class="badge" id="bdgInv" hidden></span></button>
-    <button class="tab" data-t="etoiles"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.5 6.6 19.5l1.2-6L3.3 9.3l6.1-.7z"/></svg>Étoiles<span class="badge" id="bdgSt" hidden>!</span></button>
+    <button class="tab menu" data-t="menu"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Menu<span class="badge" id="bdgMenu" hidden>!</span></button>
+    <button class="tab" data-t="arsenal"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 13l4-2 3 5 4-10 3 6 4-2"/></svg>Arsenal<span class="badge" id="bdgArs" hidden>!</span></button>
+    <button class="tab" data-t="hyper"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.5 6.6 19.5l1.2-6L3.3 9.3l6.1-.7z"/></svg>Hyperesp.<span class="badge" id="bdgSt" hidden>!</span></button>
   </nav>
+  <div hidden><span id="bdgLab"></span><span id="bdgInv"></span></div>
 </div>
 
 <script>
@@ -501,12 +538,12 @@ const CARDN=['Bronze','Argent','Or','Platine','Diamant'], CARDC=['#d9894a','#cfd
 const NORES=WORLDS.reduce((a,w)=>a+w.depth,0);
 const PROFILE='full'; // "start" = début de partie · "full" = jeu complet à 100 % (sauvegarde séparée)
 const SAVE_KEY=PROFILE==='full'?'foreuse-solaire-v3-full':'foreuse-solaire-v3';
-const GAME_VERSION='1.5.0', GAME_VER='2026-11-01b';
+const GAME_VERSION='1.6.0', GAME_VER='2026-11-01c';
 const NEWS={t:'Version '+GAME_VERSION,items:[
- ['Charges explosives','Elles se rechargent toutes seules, même quand tu ne joues pas, jusqu’à remplir ta réserve. Lance-les avec les boutons sous les étages.'],
- ['Matière noire','Une nouvelle monnaie, gagnée avec les charges, le coffre, les missions, le trou noir et les codes cadeaux. Elle paie l’arsenal et le hangar.'],
- ['Cristaux','Ils viennent seulement de l’Hyperespace et des gardiens, et achètent les talents. Tes anciens cristaux ont été partagés entre les deux monnaies.'],
- ['Arsenal','Touche le compteur de charges pour agrandir ta réserve, recharger plus vite et débloquer le lanceur automatique.']]};
+ ['Nouveau menu','Le bouton Menu, en bas au centre, rassemble tous les modules du vaisseau, rangés par catégorie.'],
+ ['Modules à débloquer','Labo, Hangar, Cartes, Trou noir… se débloquent en avançant. Les modules prêts s’allument en vert.'],
+ ['Tes monnaies','Touche tes crédits en haut pour voir tes cristaux, ta matière noire et tes charges.'],
+ ['Statistiques','Une nouvelle page avec tous tes records.']]};
 // ===== PROTECTION DES SAUVEGARDES : contenu encodé + signature ; une sauvegarde modifiée à la main est refusée =====
 const _k=(a,x)=>String.fromCharCode(...a.map(c=>c^x));
 const SV_K=_k([83,88,71,88,79,68,82,6,71,88,93,92,64,68,71,79,3,0,11,0,6],55);
@@ -585,7 +622,7 @@ function fresh(){return{cr:0,earned:0,p:0,e:0,maxP:0,unl:WORLDS.map((_,i)=>i===0
   hp:10,rare:false,inv:{},up:{drill:0,drone:0,laser:0,raf:0,scan:0,crit:0,auto:0},autoOn:true,
   crys:0,crysTotal:0,tal:{depart:0,essaim:0,prosp:0,aimant:0,moteur:0},ach:[],moonDone:[],
   ships:['navette'],ship:'navette',drills:['std'],drillSkin:'std',
-  sdr:[],museum:[],mn:0,ch:{n:10,last:0,cap:0,rech:0,multi:0,auto:0,autoOn:false,autoType:'sismique'},codes:[],seenVer:'',bot:{xp:0,lvl:1,skin:'bip'},cards:{},buyQty:1,autoAdv:false,daily:{last:'',streak:0},missions:null,boss:null,bossBeat:[],sound:true,
+  sdr:[],museum:[],modsAnn:null,seenMods:[],mn:0,ch:{n:10,last:0,cap:0,rech:0,multi:0,auto:0,autoOn:false,autoType:'sismique'},codes:[],seenVer:'',bot:{xp:0,lvl:1,skin:'bip'},cards:{},buyQty:1,autoAdv:false,daily:{last:'',streak:0},missions:null,boss:null,bossBeat:[],sound:true,
   sys:0,best:0,bossFail:{},res:{alliage:0,logis:0,ia:0,carto:0,propu:0},lab:null,bhScores:[],bhDay:'',
   st:{blocks:0,taps:0,ast:0,hyper:0,rare:0,buys:0,boss:0,halley:0,jump:0},reachedP:0,t:Date.now()}}
 let S=fresh();
@@ -805,7 +842,7 @@ let hyperArmed=false, jumpArmed=false;
 function resetRun(){
   const keep={crys:S.crys,crysTotal:S.crysTotal,tal:S.tal,ach:S.ach,st:S.st,autoOn:S.autoOn,reachedP:S.reachedP,
     moonDone:S.moonDone,ships:S.ships,ship:S.ship,drills:S.drills,drillSkin:S.drillSkin,
-    sdr:S.sdr,museum:S.museum,mn:S.mn,ch:S.ch,codes:S.codes,seenVer:S.seenVer,bot:S.bot,cards:S.cards,buyQty:S.buyQty,autoAdv:S.autoAdv,daily:S.daily,missions:S.missions,bossBeat:S.bossBeat,sound:S.sound,
+    sdr:S.sdr,museum:S.museum,modsAnn:S.modsAnn,seenMods:S.seenMods,mn:S.mn,ch:S.ch,codes:S.codes,seenVer:S.seenVer,bot:S.bot,cards:S.cards,buyQty:S.buyQty,autoAdv:S.autoAdv,daily:S.daily,missions:S.missions,bossBeat:S.bossBeat,sound:S.sound,
     sys:S.sys,best:S.best,bossFail:S.bossFail,res:S.res,lab:S.lab,bhScores:S.bhScores,bhDay:S.bhDay};
   bossWarned={};
   const auto=S.up.auto;
@@ -953,18 +990,47 @@ function load(data){
 const $=id=>document.getElementById(id);
 let arsDirty=true, botDirty=true, dirty=true, achDirty=true, dayDirty=true, musDirty=true, labDirty=true, bhDirty=true, quiet=false, tab=null, bossWarned={}, chestShown=false;
 function toast(m){if(quiet)return;const t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('show'),2600)}
-const TITLES={arsenal:'Arsenal',reglages:'Réglages',robot:'Robot compagnon',atelier:'Atelier',labo:'Laboratoire',planetes:'Système solaire',soute:'Soute',etoiles:'Étoiles',jour:'Aujourd’hui'};
-function openTab(t){
-  tab=(t===tab)?null:t; hyperArmed=false; if(tab==='arsenal')arsDirty=true; if(tab==='robot')botDirty=true; jumpArmed=false; if(tab==='labo')labDirty=true; if(tab==='jour'){checkDay();dayDirty=true}
+const TITLES={menu:'Menu',arsenal:'Arsenal',reglages:'Réglages',robot:'Robot compagnon',atelier:'Atelier',labo:'Laboratoire',planetes:'Système solaire',soute:'Soute',hyper:'Hyperespace',jour:'Aujourd’hui',
+  cartes:'Cartes de minerai',trounoir:'Trou noir',hangar:'Hangar',talents:'Talents',succes:'Succès',stats:'Statistiques'};
+const rpReach=()=>S.sys>0?99:(S.reachedP||0);
+const IC={atelier:'<path d="M14 4a5 5 0 0 0 6 6l-9 9a2.1 2.1 0 0 1-3-3z"/>',planetes:'<circle cx="12" cy="12" r="6"/><ellipse cx="12" cy="12" rx="11" ry="3.5" transform="rotate(-20 12 12)"/>',
+  arsenal:'<path d="M3 13l4-2 3 5 4-10 3 6 4-2"/>',labo:'<path d="M9 3h6M10 3v6l-5 10a1.5 1.5 0 0 0 1.3 2h11.4a1.5 1.5 0 0 0 1.3-2L14 9V3"/><path d="M7 15h10"/>',
+  hyper:'<path d="M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.5 6.6 19.5l1.2-6L3.3 9.3l6.1-.7z"/>',hangar:'<path d="M3 21V9l9-6 9 6v12"/><path d="M8 21v-7h8v7"/>',
+  talents:'<path d="M12 2v6M12 16v6M4.9 4.9l4.2 4.2M14.9 14.9l4.2 4.2M2 12h6M16 12h6M4.9 19.1l4.2-4.2M14.9 9.1l4.2-4.2"/>',
+  robot:'<path d="M12 3v3"/><rect x="5" y="6" width="14" height="10" rx="3"/><path d="M9 11h.01M15 11h.01"/><path d="M8 16l-1 4h10l-1-4"/>',
+  soute:'<path d="M3 8l9-5 9 5v8l-9 5-9-5z"/><path d="M3 8l9 5 9-5M12 13v8"/>',cartes:'<rect x="4" y="3" width="12" height="16" rx="1"/><path d="M8 21h12V7"/>',
+  succes:'<path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M7 6H4a3 3 0 0 0 3 4M17 6h3a3 3 0 0 1-3 4"/>',
+  jour:'<rect x="3" y="9" width="18" height="12"/><path d="M3 13h18M12 9v12"/>',trounoir:'<circle cx="12" cy="12" r="3"/><ellipse cx="12" cy="12" rx="10" ry="4"/>',
+  stats:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',reglages:'<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/>'};
+const MODS=[
+ {g:'Progression',k:'atelier'},{g:'Progression',k:'planetes'},{g:'Progression',k:'arsenal'},
+ {g:'Progression',k:'labo',ok:()=>rpReach()>=2,h:'Débloqué à la Terre'},{g:'Progression',k:'hyper',ok:()=>rpReach()>=1,h:'Débloqué à Vénus'},
+ {g:'Équipage',k:'hangar',ok:()=>rpReach()>=3,h:'Débloqué à Mars'},{g:'Équipage',k:'talents',ok:()=>S.crysTotal>0||S.crys>0,h:'Après un Hyperespace'},{g:'Équipage',k:'robot'},
+ {g:'Collection',k:'soute'},{g:'Collection',k:'cartes',ok:()=>rpReach()>=1,h:'Débloqué à Vénus'},{g:'Collection',k:'succes'},
+ {g:'Quotidien',k:'jour'},{g:'Quotidien',k:'trounoir',ok:()=>rpReach()>=4,h:'Débloqué à Jupiter'},
+ {g:'Système',k:'stats'},{g:'Système',k:'reglages'},
+];
+const modOk=k=>{const m=MODS.find(x=>x.k===k);return !m||!m.ok||m.ok()};
+const MODINFO={};
+let viaMenu=false, menuSig='', cartOpen=false;
+function openTab(t,fromMenu){
+  if(t&&!modOk(t)){const m=MODS.find(x=>x.k===t);toast(`Module verrouillé : ${(m&&m.h)||''}`);return}
+  viaMenu=!!fromMenu&&t!=='menu';
+  if(t&&S.seenMods&&!S.seenMods.includes(t))S.seenMods.push(t);
+  tab=(t===tab)?null:t; menuSig=''; hyperArmed=false; if(tab==='arsenal')arsDirty=true; if(tab==='robot')botDirty=true; jumpArmed=false; if(tab==='labo')labDirty=true; if(tab==='jour'||tab==='trounoir'){checkDay();dayDirty=true}
   document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('on',b.dataset.t===tab));
   Object.keys(TITLES).forEach(k=>$('pane-'+k).hidden=k!==tab);
   $('sheet').classList.toggle('open',!!tab);
   if(tab) $('sheetTitle').textContent=TITLES[tab];
+  $('back').hidden=!(tab&&viaMenu);
 }
 const orb=c=>`radial-gradient(circle at 35% 30%,${c},${shade(c,.45)})`;
 function buildStatic(){
   document.querySelector('.tabs').onclick=ev=>{const b=ev.target.closest('.tab');if(b)openTab(b.dataset.t)};
   $('close').onclick=()=>openTab(null);
+  $('back').onclick=()=>{tab=null;openTab('menu')};
+  $('menuGrid').onclick=ev=>{const b=ev.target.closest('button[data-m]');if(b&&!b.disabled){const k=b.dataset.m;tab=null;openTab(k,true)}};
+  $('coins').onclick=()=>{cartOpen=!cartOpen;$('cart').hidden=!cartOpen;$('coins').setAttribute('aria-expanded',cartOpen?'true':'false')};
   $('planets').innerHTML=ORDER.map(w=>WORLDS[w]).map((P,i)=>`<button class="pcard" data-p="${ORDER[i]}" id="pl${i}"><span class="orb" style="background:${orb(P.c)}"></span><b>${P.n}</b><small id="pls${i}"></small></button>`).join('');
   $('planets').onclick=ev=>{const b=ev.target.closest('.pcard');if(!b||b.disabled)return;const p=+b.dataset.p;select(p,S.unl[p]-1);openTab(null)};
   $('moons').innerHTML=WORLDS.map((M,w)=>M.moon?`<button class="pcard" data-w="${w}" id="mo${w}"><span class="orb" style="background:${orb(M.c)};width:44px;height:44px"></span><b>${M.n}</b><small id="mos${w}"></small><span class="mb">${M.bonus}</span></button>`:'').join('');
@@ -1004,7 +1070,6 @@ function buildStatic(){
       btns:[{label:'Importer',fn:()=>{importState(r.o);openTab(null);$('sv_code').value='';toast('Sauvegarde importée : '+saveDesc(S))}},{label:'Annuler',cls:'alt'}]})};
   $('gc_ok').onclick=redeemCode;$('gc_in').addEventListener('keydown',e=>{if(e.key==='Enter')redeemCode()});
   $('cl_in').onclick=clLogin;$('cl_up').onclick=clSend;$('cl_down').onclick=clDownload;$('cl_out').onclick=clLogout;
-  $('botOpen').onclick=()=>openTab('robot');
   $('botSkins').onclick=ev=>{const b=ev.target.closest('button[data-s]');if(!b||b.disabled)return;S.bot.skin=b.dataset.s;botDirty=true;SFX.buy();botSay('Nouvelle peinture, j’adore !',2.5)};
   $('jump').onclick=jump;
   $('labList').onclick=ev=>{const b=ev.target.closest('button[data-r]');if(b)startRes(RESEARCH.find(r=>r.k===b.dataset.r))};
@@ -1199,7 +1264,6 @@ function render(){
   {const cap=chCap(),n=S.ch.n,full=n>=cap,left=chRech()-((Date.now()-S.ch.last)/1000)%chRech();
    $('chN').textContent=`${fmt(n)}/${fmt(cap)}`;$('chOpen').classList.toggle('full',full);
    $('chT').textContent=full?'RÉSERVE PLEINE':`+${1+S.ch.multi} · ${fmtTime(left)}`;
-   $('sMn').textContent=fmt(S.mn);
    const sig=CHARGES.map(c=>chOpenType(c)?1:0).join('')+S.ch.autoType+(S.ch.auto&&S.ch.autoOn?1:0);
    if($('chBtns').dataset.sig!==sig){$('chBtns').dataset.sig=sig;
      $('chBtns').innerHTML=CHARGES.map(c=>{const ok=chOpenType(c);return `<button class="chb${S.ch.auto&&S.ch.autoOn&&S.ch.autoType===c.k?' auto':''}" data-c="${c.k}" style="--c:${c.col}" aria-label="Charge ${c.n}${ok?'':' (verrouillée)'}" ${ok?'':'disabled data-lock="1"'}><svg class="i" viewBox="0 0 24 24" aria-hidden="true">${ok?c.ic:'<rect x="6" y="11" width="12" height="9"/><path d="M9 11V8a3 3 0 0 1 6 0v3"/>'}</svg>${ok?c.s:'???'}</button>`}).join('')}
@@ -1232,7 +1296,32 @@ function render(){
   $('bdgInv').hidden=!tot; $('bdgInv').textContent=fmt(tot);
   const cg=crysGain(), canHyper=cg>=1&&(S.reachedP||0)>=1;
   const buyable=TALENTS.some(t=>S.tal[t.k]<t.max&&S.crys>=Math.ceil(t.cost(S.tal[t.k])))||[...SHIPS,...DRILLS].some(s=>s.cost&&S.mn>=s.cost&&!S.ships.includes(s.k)&&!S.drills.includes(s.k));
-  $('bdgSt').hidden=!((canHyper&&cg>=Math.max(1,S.crysTotal*0.5))||buyable);
+  $('bdgSt').hidden=!(canHyper&&cg>=Math.max(1,S.crysTotal*0.5));
+  const talOk=TALENTS.some(t=>S.tal[t.k]<t.max&&S.crys>=Math.ceil(t.cost(S.tal[t.k]))), hangOk=[...SHIPS,...DRILLS].some(s=>s.cost&&S.mn>=s.cost&&!S.ships.includes(s.k)&&!S.drills.includes(s.k))||SDRONES.some(s=>!hasD(s.k)&&S.mn>=s.cost);
+  const arsOk=S.ch.n>=chCap()||ARS.some(a=>S.ch[a.k]<a.max&&S.mn>=a.cost(S.ch[a.k]));
+  $('bdgArs').hidden=!arsOk;
+  // annonces des nouveaux modules
+  if(!Array.isArray(S.modsAnn)){S.modsAnn=MODS.filter(m=>modOk(m.k)).map(m=>m.k);S.seenMods=S.modsAnn.slice()}
+  MODS.forEach(m=>{if(modOk(m.k)&&!S.modsAnn.includes(m.k)){S.modsAnn.push(m.k);toast(`Nouveau module débloqué : ${TITLES[m.k]} (Menu)`);SFX.chest()}});
+  const dayOk=chestReady()||!!(S.missions&&S.missions.list.some(m=>!m.done&&missionProg(m)>=m.goal));
+  Object.assign(MODINFO,{atelier:afford?`${afford} achat${afford>1?'s':''}`:'',labo:S.lab?fmtTime((S.lab.end-Date.now())/1000):(!$('bdgLab').hidden?'Prêt':''),
+    planetes:(canTravel||canMoon)?'Voyage prêt':'',arsenal:S.ch.n>=chCap()?'Réserve pleine':`${fmt(S.ch.n)} charges`,hyper:canHyper?`+${fmt(cg)} cristaux`:'',
+    hangar:hangOk?'Achat possible':'',talents:talOk?'Achat possible':'',robot:`Niveau ${S.bot.lvl}`,soute:tot?`${fmt(tot)} minerais`:'',
+    cartes:'',succes:`${S.ach.length}/${ACHS.length}`,jour:dayOk?'À récupérer':'',trounoir:S.bhDay!==dayStr()?'Récompense dispo':'',stats:'',reglages:'v'+GAME_VERSION});
+  const GO=new Set([afford&&'atelier',!$('bdgLab').hidden&&'labo',(canTravel||canMoon)&&'planetes',arsOk&&'arsenal',!$('bdgSt').hidden&&'hyper',hangOk&&'hangar',talOk&&'talents',tot&&'soute',dayOk&&'jour'].filter(Boolean));
+  const newMod=MODS.some(m=>modOk(m.k)&&!S.seenMods.includes(m.k));
+  $('bdgMenu').hidden=!(newMod||GO.has('labo')||GO.has('soute')||GO.has('hangar')||GO.has('talents')||GO.has('jour'));
+  document.querySelector('.tab[data-t="hyper"]').classList.toggle('lockd',!modOk('hyper'));
+  if(cartOpen){$('cart').innerHTML=[['Crédits',fmt(S.cr),'c'],['Cristaux',fmt(S.crys),'k'],['Matière noire',fmt(S.mn),'m'],['Charges',`${fmt(S.ch.n)} / ${fmt(chCap())}`,'m'],['Bonus total',`×${fmt(gm())}`,'h']].map(r=>`<div class="svrow"><span>${r[0]}</span><b class="${r[2]}">${r[1]}</b></div>`).join('')}
+  if(tab==='menu'){
+    const sig=MODS.map(m=>[m.k,modOk(m.k)?1:0,S.seenMods.includes(m.k)?1:0].join(':')).join('|');
+    if(sig!==menuSig){menuSig=sig;let html='',g='';
+      MODS.forEach((m,i)=>{if(m.g!==g){if(g)html+='</div>';g=m.g;html+=`<div class="mgrp">${g}</div><div class="mgrid">`}
+        const ok=modOk(m.k),nw=ok&&!S.seenMods.includes(m.k);
+        html+=`<button class="mod" id="mod-${m.k}" data-m="${m.k}" ${ok?'':'disabled'}>${nw?'<span class="new">NOUVEAU</span>':''}<svg class="i" viewBox="0 0 24 24" aria-hidden="true">${ok?IC[m.k]:'<rect x="6" y="11" width="12" height="9"/><path d="M9 11V8a3 3 0 0 1 6 0v3"/>'}</svg><b>${TITLES[m.k]}</b><small id="mi-${m.k}">${ok?'':m.h}</small></button>`});
+      $('menuGrid').innerHTML=html+'</div>'}
+    MODS.forEach(m=>{if(!modOk(m.k))return;const el=$('mi-'+m.k),t=MODINFO[m.k]||'';if(el.textContent!==t)el.textContent=t;$('mod-'+m.k).classList.toggle('go',GO.has(m.k))});
+  }
   if(!tab) return;
   if(tab==='planetes'){
     ORDER.forEach((w,i)=>{
@@ -1253,7 +1342,7 @@ function render(){
       else{b.disabled=false;s.textContent=S.cleared[w]?'Explorée':`Étage ${S.unl[w]} / 3`;s.className=S.cleared[w]?'ok':''}
     });
   }
-  if(tab==='soute'){
+  if(tab==='soute'||tab==='cartes'){
     $('inv').innerHTML=keys.length?keys.map(k=>{const [w,e]=k.split('-').map(Number);const o=WORLDS[w].o[e];
       return `<div class="row"><i style="background:${o[1]}"></i><span>${o[0]} <small>· ${WORLDS[w].n}</small></span><span class="num">×${fmt(S.inv[k])}</span></div>`}).join('')
       :`<div class="empty">${S.up.auto&&S.autoOn?'La vente auto vend tout directement.':'Soute vide : va forer !'}</div>`;
@@ -1310,7 +1399,7 @@ function render(){
       $('rl-'+r.k).textContent=`niv. ${l}`; $('rd-'+r.k).textContent=`${r.d} · ${fmtTime(resTime(l))}`;
       $('rc-'+r.k).textContent=mx?'Max':fmt(c); $('rs-'+r.k).disabled=mx||!!L||S.cr<c; $('rs-'+r.k).classList.toggle('done',!!mx)});
   }
-  if(tab==='jour'){
+  if(tab==='jour'||tab==='trounoir'){
     if(bhDirty||dayDirty){
       const today=dayStr();
       $('bhCard').innerHTML=`<small>60 secondes pour casser un maximum de blocs. Ils deviennent de plus en plus durs.</small><div class="scores">${S.bhScores.length?S.bhScores.map((x,i)=>`<span>${i+1}. <b>${x.s}</b> blocs · ${x.d.slice(5).split('-').reverse().join('/')}</span>`).join(''):'<span>Aucun score pour l’instant</span>'}</div><small>${S.bhDay===today?'Récompense du jour déjà gagnée.':`Récompense du jour : ${fmt(crysScale())} matière noire par 5 blocs (15 paliers max).`}</small><button class="big hyper" id="bhGo">Plonger dans le trou noir</button>`;
@@ -1335,7 +1424,16 @@ function render(){
       b.disabled=maxed||S.cr<tot; b.classList.toggle('done',!!maxed);
     });
   }
-  if(tab==='etoiles'){
+  if(tab==='stats'){
+    const rows=[['Meilleure profondeur',`${WORLDS[ORDER[Math.min(S.maxP,LAST)]].n} · système ${S.sys+1}`],['Blocs cassés',fmt(S.st.blocks)],['Taps',fmt(S.st.taps)],
+      ['Minerais brillants',fmt(S.st.rare)],['Astéroïdes dorés',fmt(S.st.ast)],['Charges lancées',fmt(S.st.charges||0)],['Gardiens battus',fmt(S.st.boss)],
+      ['Hyperespaces',fmt(S.st.hyper)],['Sauts stellaires',fmt(S.st.jump||0)],['Comètes de Halley',fmt(S.st.halley||0)],['Améliorations achetées',fmt(S.st.buys)],
+      ['Crédits gagnés (ce voyage)',fmt(S.earned)],['Matière noire gagnée',fmt(S.st.mnTot||0)],['Cristaux gagnés',fmt(S.crysTotal)],
+      ['Dégâts par tap',fmt(clickPow())],['Débit des drones',fmt(dps())+'/s'],['Bonus total',`×${fmt(gm())}`],['Robot',`Niveau ${S.bot.lvl}`],
+      ['Succès',`${S.ach.length} / ${ACHS.length}`],['Record du trou noir',`${bhBest()} blocs`]];
+    $('statsList').innerHTML=rows.map(r=>`<div class="svrow"><span>${r[0]}</span><b>${r[1]}</b></div>`).join('');
+  }
+  if(['hyper','hangar','talents','succes'].includes(tab)){
     $('crys').textContent=fmt(S.crys);
     $('mult').textContent=`Bonus total ×${fmt(gm())}`; $('crysPct').textContent=`+${Math.round(BAL.crysM*100)} %`;
     const hb=$('hyper');
