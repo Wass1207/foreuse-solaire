@@ -7,3 +7,5 @@ Fore les 6 étages de minerais de chaque planète, de Mercure à Éris, explore 
 **Jouer :** ouvre `index.html` dans un navigateur, ou la version en ligne via GitHub Pages.
 
 La partie est sauvegardée dans le navigateur.
+
+**Version de test à 100 % :** `complet.html` (sauvegarde séparée).

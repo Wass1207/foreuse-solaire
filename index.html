@@ -448,8 +448,9 @@ const CHEST=[1,1,2,2,3,3,6];
 const crysScale=()=>{if(!S)return 1;S.best=Math.max(S.best||0,runDepth()+BAL.crSys*S.sys);return Math.max(1,Math.round(crysFor(S.best)*BAL.dayScale))};
 const CARDN=['Bronze','Argent','Or','Platine','Diamant'], CARDC=['#d9894a','#cfd6e6','#ffd23f','#7fe0d6','#c9a8ff'];
 const NORES=WORLDS.reduce((a,w)=>a+w.depth,0);
-const SAVE_KEY='foreuse-solaire-v3';
-const GAME_VERSION='1.4.0', GAME_VER='2026-10-31a';
+const PROFILE='start'; // "start" = début de partie · "full" = jeu complet à 100 % (sauvegarde séparée)
+const SAVE_KEY=PROFILE==='full'?'foreuse-solaire-v3-full':'foreuse-solaire-v3';
+const GAME_VERSION='1.4.1', GAME_VER='2026-11-01a';
 const NEWS={t:'Version '+GAME_VERSION,items:[
  ['Sauvegarde protégée','Ta partie est maintenant encodée et signée : une sauvegarde modifiée à la main est refusée.'],
  ['Codes de sauvegarde','Exporte un code pour garder ta partie, puis importe-le sur un autre appareil (Réglages, la roue dentée en haut).'],
@@ -628,7 +629,7 @@ function claimChest(){
   if(!chestReady()) return;
   const {streak,d}=chestDay(), cry=CHEST[d-1]*crysScale(), crd=Math.max(100,incomeRate()*120*d);
   S.daily={last:dayStr(),streak}; S.crys+=cry; gain(crd); SFX.chest();
-  toast(`Coffre du jour ${d} : +${cry} cristal${cry>1?'s':''} et +${fmt(crd)} crédits`); dayDirty=true;
+  toast(`Coffre du jour ${d} : +${cry} ${cry>1?'cristaux':'cristal'} et +${fmt(crd)} crédits`); dayDirty=true;
 }
 function chestModal(){
   const {d}=chestDay();
@@ -644,7 +645,7 @@ function checkDay(){
   }
 }
 function missionProg(m){return Math.min(m.goal,(S.st[m.k]||0)-m.base)}
-function claimMission(i){const m=S.missions.list[i];if(m.done||missionProg(m)<m.goal)return;m.done=true;S.crys+=m.rew;SFX.chest();toast(`Mission réussie : +${fmt(m.rew)} cristal${m.rew>1?'s':''}`);dayDirty=true}
+function claimMission(i){const m=S.missions.list[i];if(m.done||missionProg(m)<m.goal)return;m.done=true;S.crys+=m.rew;SFX.chest();toast(`Mission réussie : +${fmt(m.rew)} ${m.rew>1?'cristaux':'cristal'}`);dayDirty=true}
 
 /* ---------- avance auto ---------- */
 let bossRetryAt=0;
@@ -820,6 +821,25 @@ function catchAst(){
 
 /* ---------- sauvegarde ---------- */
 function save(){S.t=Date.now();try{localStorage.setItem(SAVE_KEY,'F1:'+svPack(JSON.stringify(S)));lastSave=Date.now();return true}catch(_){return false}}
+// ===== VERSION « JEU COMPLET À 100 % » (pour tester : sauvegarde séparée) =====
+function makeFullState(){
+  const s=fresh();
+  s.sys=4;s.maxP=LAST;s.reachedP=LAST;s.best=LAST*6+6+BAL.crSys*4;
+  WORLDS.forEach((w,i)=>{s.unl[i]=w.depth;s.cleared[i]=true;s.moonOpen[i]=!!w.moon;for(let e=0;e<w.depth;e++){s.prog[i][e]=need(i,e)*50;s.museum.push(i+'-'+e);s.cards[i+'-'+e]=BAL.cardT[BAL.cardT.length-1]}});
+  s.moonDone=WORLDS.filter(w=>w.moon).map(w=>w.bk);
+  s.bossBeat=WORLDS.map((w,i)=>w.moon?-1:i).filter(i=>i>=0);
+  Object.assign(s.up,{drill:620,drone:580,laser:36,raf:26,scan:16,crit:17,auto:1});
+  TALENTS.forEach(t=>s.tal[t.k]=t.max);
+  s.ships=SHIPS.map(x=>x.k);s.ship='arche';s.drills=DRILLS.map(x=>x.k);s.drillSkin='neant';s.sdr=SDRONES.map(x=>x.k);
+  RESEARCH.forEach(r=>s.res[r.k]=r.max||28);
+  s.bot={xp:0,lvl:100,skin:'soleil'};
+  s.crysTotal=600000;s.crys=250000;s.cr=1e72;s.earned=1e75;
+  Object.assign(s.st,{blocks:5e6,taps:2e5,ast:500,hyper:60,rare:2e5,buys:5e4,boss:300,halley:20,jump:4});
+  s.daily={last:'',streak:7};s.bhScores=[{s:120,d:new Date().toLocaleDateString('fr-CA')}];s.autoAdv=true;s.seenVer=GAME_VER;
+  s.ach=ACHS.map(a=>a.id);
+  s.p=ORDER[LAST];s.e=5;s.hp=10;s.t=Date.now();
+  return s;
+}
 function applyState(d){
   if(!(d&&d.up))return false;
   const f=fresh(), g=fresh();S=Object.assign(f,d);
@@ -882,7 +902,7 @@ function buildStatic(){
   $('sndBtn').classList.toggle('off',!S.sound);
   $('bossBtn').onclick=startBoss;
   $('setBtn').onclick=()=>openTab('reglages');
-  $('sv_ver').textContent='v'+GAME_VERSION;
+  $('sv_ver').textContent='v'+GAME_VERSION+(PROFILE==='full'?' (100 %)':'');
   $('sv_now').onclick=()=>svMsg(save()?'Partie sauvegardée.':'Impossible de sauvegarder dans ce navigateur : exporte un code pour garder ta partie.');
   $('sv_exp').onclick=async()=>{const c=makeCode(),t=$('sv_code');t.value=c;const ok=await copyText(c,t);
     svMsg(ok?'Code exporté et copié. Garde-le dans tes notes.':'Code généré : copie-le ou partage-le pour le garder.')};
@@ -913,7 +933,7 @@ function buildStatic(){
   $('travel').onclick=travel; $('sell').onclick=sellAll; $('hyper').onclick=hyper;
   $('auto').onchange=e=>{S.autoOn=e.target.checked};
   $('reset').onclick=askReset;
-  $('resetYes').onclick=()=>{S=fresh();save();cancelReset();initWx(0);dirty=true;achDirty=true;openTab(null);toast('Nouvelle partie !')};
+  $('resetYes').onclick=()=>{S=PROFILE==='full'?makeFullState():fresh();save();cancelReset();initWx(0);dirty=true;achDirty=true;openTab(null);toast('Nouvelle partie !')};
 }
 /* ===== codes de sauvegarde ===== */
 function svMsg(t){$('sv_msg').textContent=t;clearTimeout(svMsg.t);svMsg.t=setTimeout(()=>$('sv_msg').textContent='',7000)}
@@ -962,7 +982,7 @@ function redeemCode(){
 /* ===== sauvegarde Discord (Supabase, comme The Warrior) ===== */
 const ON_SITE=/^https?:$/.test(location.protocol)&&/github\.io$/.test(location.hostname);
 const CLOUD_URL='https://qptwgdqqnitygrapvsbk.supabase.co',CLOUD_KEY='sb_publishable_v4OUM_s2Hq_lih70_cEYPw_SWzuUdOm';
-const CLOUD_SLOT='foreuse-solaire',CLOUD_EVERY=60000,CLOUD_LIB='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4/dist/umd/supabase.min.js';
+const CLOUD_SLOT=PROFILE==='full'?'foreuse-solaire-full':'foreuse-solaire',CLOUD_EVERY=60000,CLOUD_LIB='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4/dist/umd/supabase.min.js';
 let SB=null,clUser=null,clBusy=false,clPaused=false,clLastUp=0;
 const clKey=SAVE_KEY+'_cloud';
 const clGet=()=>{try{return JSON.parse(localStorage.getItem(clKey)||'{}')}catch(e){return {}}};
@@ -1081,7 +1101,7 @@ function render(){
   checkAch();
   if(dirty){
     buildEtages();
-    $('pname').textContent=Wd.n; $('pua').textContent=Wd.ua+(S.sys?` · ${sysInfo(S.sys).n}`:'');
+    $('pname').textContent=Wd.n; $('pua').textContent=(PROFILE==='full'?'VERSION 100 % · ':'')+Wd.ua+(S.sys?` · ${sysInfo(S.sys).n}`:'');
     $('autoWrap').hidden=!S.up.auto; $('auto').checked=S.autoOn;
     dirty=false;
   }
@@ -1176,7 +1196,7 @@ function render(){
     }
     const L=S.lab;
     if(L){const r=RESEARCH.find(x=>x.k===L.k), left=(L.end-Date.now())/1000;
-      $('labNow').innerHTML=`<div class="labnow"><div class="row"><b>${r.n} niv. ${S.res[r.k]+1}</b><span class="num">${fmtTime(left)}</span></div><div class="bar"><i style="width:${Math.min(100,100*(1-left/L.dur))}%"></i></div><button class="big hyper" id="rush" ${S.crys<rushCost()?'disabled':''}>Finir maintenant · ${rushCost()} cristal${rushCost()>1?'s':''}</button></div>`}
+      $('labNow').innerHTML=`<div class="labnow"><div class="row"><b>${r.n} niv. ${S.res[r.k]+1}</b><span class="num">${fmtTime(left)}</span></div><div class="bar"><i style="width:${Math.min(100,100*(1-left/L.dur))}%"></i></div><button class="big hyper" id="rush" ${S.crys<rushCost()?'disabled':''}>Finir maintenant · ${rushCost()} ${rushCost()>1?'cristaux':'cristal'}</button></div>`}
     else $('labNow').innerHTML=`<div class="labnow"><small>Lance une recherche : elle continue même quand tu ne joues pas.</small></div>`;
     RESEARCH.forEach(r=>{const l=S.res[r.k], mx=r.max&&l>=r.max, c=resCost(l);
       $('rl-'+r.k).textContent=`niv. ${l}`; $('rd-'+r.k).textContent=`${r.d} · ${fmtTime(resTime(l))}`;
@@ -1185,7 +1205,7 @@ function render(){
   if(tab==='jour'){
     if(bhDirty||dayDirty){
       const today=dayStr();
-      $('bhCard').innerHTML=`<small>60 secondes pour casser un maximum de blocs. Ils deviennent de plus en plus durs.</small><div class="scores">${S.bhScores.length?S.bhScores.map((x,i)=>`<span>${i+1}. <b>${x.s}</b> blocs · ${x.d.slice(5).split('-').reverse().join('/')}</span>`).join(''):'<span>Aucun score pour l’instant</span>'}</div><small>${S.bhDay===today?'Récompense du jour déjà gagnée.':`Récompense du jour : ${fmt(crysScale())} cristal${crysScale()>1?'s':''} par 5 blocs (15 paliers max).`}</small><button class="big hyper" id="bhGo">Plonger dans le trou noir</button>`;
+      $('bhCard').innerHTML=`<small>60 secondes pour casser un maximum de blocs. Ils deviennent de plus en plus durs.</small><div class="scores">${S.bhScores.length?S.bhScores.map((x,i)=>`<span>${i+1}. <b>${x.s}</b> blocs · ${x.d.slice(5).split('-').reverse().join('/')}</span>`).join(''):'<span>Aucun score pour l’instant</span>'}</div><small>${S.bhDay===today?'Récompense du jour déjà gagnée.':`Récompense du jour : ${fmt(crysScale())} ${crysScale()>1?'cristaux':'cristal'} par 5 blocs (15 paliers max).`}</small><button class="big hyper" id="bhGo">Plonger dans le trou noir</button>`;
       bhDirty=false;
     }
     if(dayDirty){
@@ -1195,7 +1215,7 @@ function render(){
       dayDirty=false;
     }
     S.missions.list.forEach((m,i)=>{const p=missionProg(m);$('misp'+i).style.width=(100*p/m.goal)+'%';$('mist'+i).textContent=`${fmt(p)} / ${fmt(m.goal)}`;
-      const b=$('misb'+i);b.textContent=m.done?'Fait ✓':`+${fmt(m.rew)} cristal${m.rew>1?'s':''}`;b.disabled=m.done||p<m.goal;$('mis'+i).classList.toggle('claimed',m.done)});
+      const b=$('misb'+i);b.textContent=m.done?'Fait ✓':`+${fmt(m.rew)} ${m.rew>1?'cristaux':'cristal'}`;b.disabled=m.done||p<m.goal;$('mis'+i).classList.toggle('claimed',m.done)});
   }
   if(tab==='atelier'){
     document.querySelectorAll('#qty button').forEach(b=>b.classList.toggle('on',String(S.buyQty)===b.dataset.q));
@@ -1543,6 +1563,7 @@ window.addEventListener('keydown',e=>{if(e.code==='Space'&&e.target===document.b
 /* ---------- boucle ---------- */
 function start(data){
   load(data&&data.state);
+  if(PROFILE==='full'&&!(S.st.blocks>0)){S=makeFullState();save()}
   S.reachedP=Math.max(S.reachedP||0,S.maxP);
   checkDay();
   buildStatic(); resize(); render();
