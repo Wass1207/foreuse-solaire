@@ -297,6 +297,11 @@ button.coins{border:0;background:transparent;color:inherit;text-align:left;paddi
 .mod:disabled svg{color:var(--dim)}
 .mod .new{position:absolute;top:-1px;left:-1px;background:var(--mint);color:#063d22;font-family:var(--f-num);font-size:8px;font-weight:600;padding:1px 4px}
 .mod .bdg{position:absolute;top:4px;right:4px;background:var(--amber);color:var(--amber-ink);font-family:var(--f-num);font-size:9px;font-weight:600;padding:0 4px;line-height:14px}
+.ets{position:absolute;right:20px;top:120px;z-index:2;display:flex;flex-direction:column;gap:0;width:46px}
+.ets .et{width:46px;padding:0;margin:3px 0;justify-content:center;gap:3px;background:rgba(10,19,34,.88)}
+.ets .et .pb{width:70%}
+.ets .et:disabled{background:rgba(4,7,13,.7)}
+.ets .et.on{background:rgba(6,42,51,.92)}
 #toast{position:absolute;left:50%;bottom:58px;transform:translate(-50%,8px);background:rgba(4,7,13,.94);border:1px solid var(--amber);color:var(--amber);font-family:var(--f-disp);font-weight:600;letter-spacing:.04em;padding:9px 14px;font-size:13px;max-width:calc(100% - 32px);text-align:center;opacity:0;transition:opacity .2s,transform .2s;pointer-events:none;z-index:6}
 #toast.show{opacity:1;transform:translate(-50%,0)}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
@@ -319,6 +324,7 @@ button.coins{border:0;background:transparent;color:inherit;text-align:left;paddi
     <canvas id="cv" aria-label="Coupe de la planète, touche pour forer"></canvas>
     <div class="ptag"><h1 id="pname">Mercure</h1><small id="pua"></small></div>
     <div class="hint" id="hint">[ TOUCHE LA PLANÈTE POUR FORER ]</div>
+    <div class="ets" id="etages" role="group" aria-label="Étages"></div>
     <div class="boost" id="boost"></div>
     <div class="bossbar" id="bossbar" hidden><b id="bossName"></b><div class="bar"><i id="bossHp"></i></div><span class="num" id="bossT"></span></div>
     <button class="bossbtn" id="bossBtn" hidden>COMBATTRE LE GARDIEN</button>
@@ -421,7 +427,6 @@ button.coins{border:0;background:transparent;color:inherit;text-align:left;paddi
 
   <div class="dock">
     <div class="hp"><span class="lbl" id="bName">Bloc</span><div class="bar"><i id="bBar"></i></div><span class="val num" id="bHp"></span><button class="autoadv" id="autoAdv" aria-pressed="false">AUTO</button></div>
-    <div class="ets" id="etages"></div>
     <div class="chrow"><button class="chcount" id="chOpen" aria-label="Arsenal des charges"><span class="lab">CHARGES</span><b id="chN">0/10</b><small id="chT"></small></button><div class="chbtns" id="chBtns"></div></div>
   </div>
 
@@ -538,7 +543,7 @@ const CARDN=['Bronze','Argent','Or','Platine','Diamant'], CARDC=['#d9894a','#cfd
 const NORES=WORLDS.reduce((a,w)=>a+w.depth,0);
 const PROFILE='start'; // "start" = début de partie · "full" = jeu complet à 100 % (sauvegarde séparée)
 const SAVE_KEY=PROFILE==='full'?'foreuse-solaire-v3-full':'foreuse-solaire-v3';
-const GAME_VERSION='1.6.0', GAME_VER='2026-11-01c';
+const GAME_VERSION='1.6.1', GAME_VER='2026-11-01d';
 const NEWS={t:'Version '+GAME_VERSION,items:[
  ['Nouveau menu','Le bouton Menu, en bas au centre, rassemble tous les modules du vaisseau, rangés par catégorie.'],
  ['Modules à débloquer','Labo, Hangar, Cartes, Trou noir… se débloquent en avançant. Les modules prêts s’allument en vert.'],
@@ -1238,9 +1243,14 @@ function checkNews(){
 function askReset(){$('resetAsk').hidden=false;$('resetYes').hidden=false;$('reset').textContent='Annuler';$('reset').onclick=cancelReset}
 function cancelReset(){$('resetAsk').hidden=true;$('resetYes').hidden=true;$('reset').textContent='Effacer la sauvegarde';$('reset').onclick=askReset}
 
-function buildEtages(){
+let etsKey='';
+function layoutEts(){
+  if(!W) return;const {top,bh}=geom(),k=top+':'+bh+':'+S.p;if(k===etsKey)return;etsKey=k;
+  $('etages').style.top=top+'px';
+  $('etages').querySelectorAll('.et').forEach(b=>b.style.height=Math.max(30,bh-6)+'px');
+}
+function buildEtages(){etsKey='';
   const Wd=WORLDS[S.p];
-  $('etages').style.gridTemplateColumns=`repeat(${Wd.depth},1fr)`;
   $('etages').innerHTML=Wd.o.map((o,e)=>`<button class="et" data-e="${e}" id="et${e}" aria-label="Étage ${e+1} : ${o[0]}"><span id="etg${e}"></span><span class="pb"><i id="etp${e}"></i></span></button>`).join('');
 }
 function hangarPrice(el,own,eq,cost){
@@ -1261,6 +1271,7 @@ function render(){
   $('boost').innerHTML=(boostT>0?`<span>${boostName} · ${Math.ceil(boostT)} s</span>`:'')+(flareT>0?`<span>ÉRUPTION ×3 · ${Math.ceil(flareT)} s</span>`:'')+(evt?`<span class="evt">${EVENTS[evt.k].n} · ${Math.ceil(evt.t)} s</span>`:'')+(combo>=5?`<span class="combo">COMBO ${combo} · ×${comboMul().toFixed(1).replace('.',',')}</span>`:'');
   $('autoAdv').classList.toggle('on',!!S.autoAdv);$('autoAdv').setAttribute('aria-pressed',S.autoAdv?'true':'false');
   checkLab();
+  layoutEts();
   {const cap=chCap(),n=S.ch.n,full=n>=cap,left=chRech()-((Date.now()-S.ch.last)/1000)%chRech();
    $('chN').textContent=`${fmt(n)}/${fmt(cap)}`;$('chOpen').classList.toggle('full',full);
    $('chT').textContent=full?'RÉSERVE PLEINE':`+${1+S.ch.multi} · ${fmtTime(left)}`;
@@ -1655,7 +1666,7 @@ function draw(time,dt){
     } else {
       ctx.fillStyle=rgba(col,on?.3:.17);ctx.fillRect(-10,y,W+20,bh+1);
       for(const p of specks[k]){
-        const px=p.x*(W-40)+8, py=y+10+p.y*(bh-20), r=Math.max(2,Math.min(bh*.06,6)*p.s);
+        const px=p.x*(W-96)+8, py=y+10+p.y*(bh-20), r=Math.max(2,Math.min(bh*.06,6)*p.s);
         if(px<150&&Math.abs(py-(y+bh/2))<10) continue;
         ctx.save();ctx.translate(px,py);ctx.rotate(Math.PI/4);
         if(p.s>.85){ctx.fillStyle=col;ctx.fillRect(-r/1.4,-r/1.4,r*1.4,r*1.4)}else{ctx.strokeStyle=col;ctx.lineWidth=1;ctx.strokeRect(-r,-r,r*2,r*2)}
@@ -1672,8 +1683,8 @@ function draw(time,dt){
     try{ctx.letterSpacing='0px'}catch(_){}
     ctx.font=`400 ${Math.max(9,fs-2)}px "JetBrains Mono", monospace`;ctx.textAlign='right';
     ctx.fillStyle=on?HUD.cyan:locked?HUD.dim:HUD.muted;
-    ctx.fillText(`−${kmFmt(R*k/D)} km`,W-24,y+bh/2);
-    if(on){ctx.strokeStyle=boostT>0?'#ff6b6b':HUD.cyan;ctx.lineWidth=2;const s=12,x0=4,x1=W-20,y0=y+4,y1=y+bh-4;
+    ctx.fillText(`−${kmFmt(R*k/D)} km`,W-76,y+bh/2);
+    if(on){ctx.strokeStyle=boostT>0?'#ff6b6b':HUD.cyan;ctx.lineWidth=2;const s=12,x0=4,x1=W-72,y0=y+4,y1=y+bh-4;
       corner(x0,y0,1,1,s);corner(x1,y0,-1,1,s);corner(x0,y1,1,-1,s);corner(x1,y1,-1,-1,s)}
   }
   // règle de profondeur
