@@ -247,6 +247,31 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-acti
 #gc_in{flex:1;min-width:0;background:var(--bg);border:1px solid var(--line2);color:var(--text);font-family:var(--f-num);font-size:14px;padding:10px;text-transform:uppercase}
 .gcrow .big{width:auto;padding:10px 16px;font-size:12px}
 .big.dscbtn{background:#5865f2;color:#fff;display:flex;align-items:center;justify-content:center;gap:10px}
+:root{--mn:#ff6fd8;--mn-ink:#2a0622}
+.card .price.mn{background:var(--mn);color:var(--mn-ink)}
+.card:disabled .price.mn{background:transparent;color:var(--dim);clip-path:none;box-shadow:inset 0 0 0 1px var(--line)}
+.chrow{display:flex;gap:6px;align-items:stretch}
+.chcount{flex:none;width:96px;border:1px solid var(--line2);background:var(--panel2);color:var(--text);display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:1px;padding:5px 8px;text-align:left}
+.chcount .lab{font-size:9px;letter-spacing:.16em;color:var(--muted)}
+.chcount b{font-family:var(--f-num);font-weight:600;font-size:14px;color:var(--mn)}
+.chcount small{font-family:var(--f-num);font-size:9px;color:var(--muted)}
+.chcount.full b{color:var(--amber)}
+.chbtns{flex:1;min-width:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px}
+.chb{position:relative;border:1px solid var(--c);background:transparent;color:var(--c);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:4px 0;min-height:44px;font-family:var(--f-num);font-size:9px;letter-spacing:.04em}
+.chb svg{width:18px;height:18px}
+.chb:disabled{border-color:var(--line);color:var(--dim);border-style:dashed;cursor:default}
+.chb.auto::after{content:"AUTO";position:absolute;top:-7px;right:-3px;background:var(--mint);color:#063d22;font-size:7px;font-weight:600;padding:0 3px;line-height:11px}
+.chb:not(:disabled):active{background:var(--panel2)}
+.mnbox{border:1px solid var(--line);background:var(--panel2);padding:14px;display:flex;flex-direction:column;gap:8px;margin-bottom:12px;position:relative}
+.mnbox::before{content:"";position:absolute;left:-1px;top:-1px;width:12px;height:12px;border-top:2px solid var(--mn);border-left:2px solid var(--mn)}
+.mnbox .v{font-family:var(--f-num);font-weight:600;font-size:26px;color:var(--mn);display:flex;align-items:center;gap:10px}
+.mnbox .v i{width:12px;height:12px;border-radius:50%;border:1.5px solid var(--mn);box-shadow:inset 0 0 0 3px var(--bg),inset 0 0 0 6px var(--mn)}
+.mnbox small{color:var(--muted);font-size:12px;line-height:1.45}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.chip{border:1px solid var(--line2);background:transparent;color:var(--muted);font-family:var(--f-num);font-size:11px;padding:8px 10px;min-height:36px}
+.chip.on{border-color:var(--mint);color:var(--mint);background:#072018}
+.chip:disabled{opacity:.4;cursor:default}
+.mini .mnv b{color:var(--mn)}
 #toast{position:absolute;left:50%;bottom:58px;transform:translate(-50%,8px);background:rgba(4,7,13,.94);border:1px solid var(--amber);color:var(--amber);font-family:var(--f-disp);font-weight:600;letter-spacing:.04em;padding:9px 14px;font-size:13px;max-width:calc(100% - 32px);text-align:center;opacity:0;transition:opacity .2s,transform .2s;pointer-events:none;z-index:6}
 #toast.show{opacity:1;transform:translate(-50%,0)}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
@@ -258,7 +283,7 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-acti
 <div class="app">
   <div class="hud">
     <div class="coins"><span class="lab">CRÉDITS</span><span id="sCr" class="num">0</span></div>
-    <div class="mini"><span>TAP <b id="sClick">1</b></span><span>DÉBIT <b id="sDps">0</b>/s</span></div>
+    <div class="mini"><span>TAP <b id="sClick">1</b></span><span>DÉBIT <b id="sDps">0</b>/s</span><span class="mnv">M.N. <b id="sMn">0</b></span></div>
     <button class="hbtn" id="dayBtn" aria-label="Coffre et missions du jour"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="9" width="18" height="12"/><path d="M3 13h18M12 9v12M8 9c-2-1-2-5 1-5 2 0 3 5 3 5s1-5 3-5c3 0 3 4 1 5"/></svg><span class="badge" id="bdgDay" hidden>!</span></button>
     <button class="hbtn snd" id="setBtn" aria-label="Réglages et sauvegarde"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
     <button class="hbtn snd" id="sndBtn" aria-label="Couper le son"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg></button>
@@ -284,6 +309,18 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-acti
         <label class="toggle" id="autoWrap" hidden><span>Vente automatique</span><input type="checkbox" id="auto"></label>
         <div class="sub">Cartes de minerai · <span id="musCount" class="num" style="letter-spacing:0"></span></div>
         <div id="museum"></div>
+      </div>
+      <div id="pane-arsenal" hidden>
+        <div class="mnbox"><div class="v"><i></i><span id="mnVal">0</span></div><small>La matière noire vient des charges, du coffre du jour, des missions, du trou noir, de la comète et des codes cadeaux. Elle paie l’arsenal, le hangar et les raccourcis. Elle n’est jamais perdue, même après l’Hyperespace.</small></div>
+        <div class="sub" style="margin-top:0">Charges</div>
+        <div class="list" id="chList"></div>
+        <div class="sub">Améliorations de l’arsenal</div>
+        <div class="list" id="arsUps"></div>
+        <div id="autoBox" hidden>
+          <div class="sub">Lanceur automatique</div>
+          <label class="toggle"><span>Lancer tout seul (jeu ouvert)</span><input type="checkbox" id="autoCh"></label>
+          <div class="chips" id="autoChips"></div>
+        </div>
       </div>
       <div id="pane-reglages" hidden>
         <div id="clbox" hidden>
@@ -327,7 +364,7 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-acti
       <div id="pane-etoiles" hidden>
         <div class="stars">
           <div class="row"><span class="crys"><i class="gemv"></i><span id="crys" class="num">0</span></span><small id="mult" style="text-align:right"></small></div>
-          <small>L'Hyperespace te renvoie sur Mercure avec des cristaux stellaires. Plus tu es allé profond, plus tu gagnes de cristaux. Chaque cristal donne <span id="crysPct">+5 %</span> de dégâts et de valeur pour toujours. Tu gardes tes talents, tes succès et la vente auto.</small>
+          <small>L'Hyperespace te renvoie sur Mercure avec des cristaux stellaires. Plus tu es allé profond, plus tu gagnes de cristaux. Chaque cristal donne <span id="crysPct">+5 %</span> de dégâts et de valeur pour toujours, et les cristaux achètent les talents. Tu gardes tes talents, ta matière noire, tes succès et la vente auto.</small>
           <button class="big hyper" id="hyper"></button>
         </div>
         <div class="stars sys"><div class="row"><span class="crys" id="sysName"></span><small id="sysMul" style="text-align:right"></small></div><small id="sysRule"></small><small>Le saut stellaire t'emmène dans un autre système : tout devient 10× plus puissant et une nouvelle règle s'applique. Tu gardes tout ce qui est permanent.</small><button class="big hyper" id="jump"></button></div>
@@ -349,6 +386,7 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-acti
   <div class="dock">
     <div class="hp"><span class="lbl" id="bName">Bloc</span><div class="bar"><i id="bBar"></i></div><span class="val num" id="bHp"></span><button class="autoadv" id="autoAdv" aria-pressed="false">AUTO</button></div>
     <div class="ets" id="etages"></div>
+    <div class="chrow"><button class="chcount" id="chOpen" aria-label="Arsenal des charges"><span class="lab">CHARGES</span><b id="chN">0/10</b><small id="chT"></small></button><div class="chbtns" id="chBtns"></div></div>
   </div>
 
   <div class="modal" id="modal" hidden><div class="mbox" role="dialog" aria-modal="true" aria-labelledby="mTitle"><h3 id="mTitle"></h3><div id="mBody"></div><div class="mbtns" id="mBtns"></div></div></div>
@@ -445,18 +483,30 @@ const MTYPES=[
  {k:'boss',t:g=>`Bats ${g} gardien${g>1?'s':''} du noyau`,g:[1,1,2]},
 ];
 const CHEST=[1,1,2,2,3,3,6];
+const CHARGES=[
+ {k:'sismique',s:'SÉISME',n:'Sismique',col:'#ffb020',p:0,d:'Frappe 40 fois plus fort qu’un tap',ic:'<path d="M3 13l4-2 3 5 4-10 3 6 4-2"/>'},
+ {k:'noire',s:'M. NOIRE',n:'Mat. noire',col:'#ff6fd8',p:1,d:'Rapporte de la matière noire',ic:'<circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2.5"/>'},
+ {k:'frag',s:'FRAG.',n:'Fragment.',col:'#3df2ff',p:3,d:'Casse 3 blocs d’un coup',ic:'<path d="M12 3v5M12 16v5M3 12h5M16 12h5M6 6l3 3M15 15l3 3M18 6l-3 3M9 15l-3 3"/>'},
+ {k:'or',s:'OR',n:'Aurifère',col:'#ffe27a',p:4,d:'Le bloc devient un minerai brillant ×10',ic:'<path d="M12 3l8 9-8 9-8-9z"/><path d="M4 12h16"/>'},
+ {k:'plasma',s:'PLASMA',n:'Plasma',col:'#c08cff',p:5,d:'Enlève 8 % de vie à un gardien, sinon frappe ×150',ic:'<path d="M13 2L5 14h6l-1 8 8-12h-6z"/>'},
+];
+const ARS=[
+ {k:'cap',n:'Soute à charges',d:l=>`Réserve ${chCapAt(l)} → ${chCapAt(l+1)} charges`,cost:l=>Math.ceil(15*Math.pow(1.55,l)),max:40},
+ {k:'rech',n:'Recharge rapide',d:l=>`Une charge toutes les ${fmtTime(chRechAt(l))} → ${fmtTime(chRechAt(l+1))}`,cost:l=>Math.ceil(25*Math.pow(1.7,l)),max:30},
+ {k:'multi',n:'Charges jumelées',d:l=>`${l+1} → ${l+2} charges par recharge`,cost:l=>Math.ceil(400*Math.pow(6,l)),max:4},
+ {k:'auto',n:'Lanceur automatique',d:()=>'Lance une charge toute seule toutes les 3 s, jeu ouvert',cost:()=>300,max:1},
+];
 const crysScale=()=>{if(!S)return 1;S.best=Math.max(S.best||0,runDepth()+BAL.crSys*S.sys);return Math.max(1,Math.round(crysFor(S.best)*BAL.dayScale))};
 const CARDN=['Bronze','Argent','Or','Platine','Diamant'], CARDC=['#d9894a','#cfd6e6','#ffd23f','#7fe0d6','#c9a8ff'];
 const NORES=WORLDS.reduce((a,w)=>a+w.depth,0);
 const PROFILE='full'; // "start" = début de partie · "full" = jeu complet à 100 % (sauvegarde séparée)
 const SAVE_KEY=PROFILE==='full'?'foreuse-solaire-v3-full':'foreuse-solaire-v3';
-const GAME_VERSION='1.4.1', GAME_VER='2026-11-01a';
+const GAME_VERSION='1.5.0', GAME_VER='2026-11-01b';
 const NEWS={t:'Version '+GAME_VERSION,items:[
- ['Sauvegarde protégée','Ta partie est maintenant encodée et signée : une sauvegarde modifiée à la main est refusée.'],
- ['Codes de sauvegarde','Exporte un code pour garder ta partie, puis importe-le sur un autre appareil (Réglages, la roue dentée en haut).'],
- ['Sauvegarde Discord','Connecte-toi avec Discord pour retrouver ta partie sur tous tes appareils.'],
- ['Codes cadeaux','Entre un code cadeau dans les Réglages pour recevoir des cristaux.'],
- ['Mises à jour automatiques','Le jeu se met à jour tout seul quand une nouvelle version sort.']]};
+ ['Charges explosives','Elles se rechargent toutes seules, même quand tu ne joues pas, jusqu’à remplir ta réserve. Lance-les avec les boutons sous les étages.'],
+ ['Matière noire','Une nouvelle monnaie, gagnée avec les charges, le coffre, les missions, le trou noir et les codes cadeaux. Elle paie l’arsenal et le hangar.'],
+ ['Cristaux','Ils viennent seulement de l’Hyperespace et des gardiens, et achètent les talents. Tes anciens cristaux ont été partagés entre les deux monnaies.'],
+ ['Arsenal','Touche le compteur de charges pour agrandir ta réserve, recharger plus vite et débloquer le lanceur automatique.']]};
 // ===== PROTECTION DES SAUVEGARDES : contenu encodé + signature ; une sauvegarde modifiée à la main est refusée =====
 const _k=(a,x)=>String.fromCharCode(...a.map(c=>c^x));
 const SV_K=_k([83,88,71,88,79,68,82,6,71,88,93,92,64,68,71,79,3,0,11,0,6],55);
@@ -535,7 +585,7 @@ function fresh(){return{cr:0,earned:0,p:0,e:0,maxP:0,unl:WORLDS.map((_,i)=>i===0
   hp:10,rare:false,inv:{},up:{drill:0,drone:0,laser:0,raf:0,scan:0,crit:0,auto:0},autoOn:true,
   crys:0,crysTotal:0,tal:{depart:0,essaim:0,prosp:0,aimant:0,moteur:0},ach:[],moonDone:[],
   ships:['navette'],ship:'navette',drills:['std'],drillSkin:'std',
-  sdr:[],museum:[],codes:[],seenVer:'',bot:{xp:0,lvl:1,skin:'bip'},cards:{},buyQty:1,autoAdv:false,daily:{last:'',streak:0},missions:null,boss:null,bossBeat:[],sound:true,
+  sdr:[],museum:[],mn:0,ch:{n:10,last:0,cap:0,rech:0,multi:0,auto:0,autoOn:false,autoType:'sismique'},codes:[],seenVer:'',bot:{xp:0,lvl:1,skin:'bip'},cards:{},buyQty:1,autoAdv:false,daily:{last:'',streak:0},missions:null,boss:null,bossBeat:[],sound:true,
   sys:0,best:0,bossFail:{},res:{alliage:0,logis:0,ia:0,carto:0,propu:0},lab:null,bhScores:[],bhDay:'',
   st:{blocks:0,taps:0,ast:0,hyper:0,rare:0,buys:0,boss:0,halley:0,jump:0},reachedP:0,t:Date.now()}}
 let S=fresh();
@@ -573,6 +623,8 @@ const ACHS=[
  ...[1,12].map((v,i)=>({id:'g'+i,n:v>1?'Tueur de gardiens':'Premier gardien',d:v>1?'Battre les 12 gardiens':'Battre un gardien du noyau',ok:()=>S.bossBeat.length>=v})),
  {id:'mu',n:'Conservateur',d:'Compléter le musée',ok:()=>S.museum.length>=NORES},
  {id:'cb',n:'Combo ×3',d:'Atteindre un combo de 100',ok:()=>combo>=100},
+ ...[1,1000,25000].map((v,i)=>({id:'ch'+i,n:v>1?`${fmtA(v)} charges`:'Première charge',d:'Charges explosives lancées',ok:()=>(S.st.charges||0)>=v})),
+ {id:'chc',n:'Grande soute',d:'Réserve de 500 charges',ok:()=>chCap()>=500},
  ...[10,30,80].map((v,i)=>({id:'bot'+i,n:`Bip niveau ${v}`,d:'Faire grandir ton robot',ok:()=>S.bot.lvl>=v})),
  {id:'j7',n:'Fidèle',d:'Ouvrir le coffre 7 jours de suite',ok:()=>S.daily.streak>=7},
  ...[10,50,150].map((v,i)=>({id:'d'+i,n:`${v} drones`,d:'Avoir autant de drones',ok:()=>S.up.drone>=v})),
@@ -628,12 +680,12 @@ function incomeRate(){return (drillPowAt(S.up.drill)*dmgMul()*2+dps())/blockHp(S
 function claimChest(){
   if(!chestReady()) return;
   const {streak,d}=chestDay(), cry=CHEST[d-1]*crysScale(), crd=Math.max(100,incomeRate()*120*d);
-  S.daily={last:dayStr(),streak}; S.crys+=cry; gain(crd); SFX.chest();
-  toast(`Coffre du jour ${d} : +${cry} ${cry>1?'cristaux':'cristal'} et +${fmt(crd)} crédits`); dayDirty=true;
+  S.daily={last:dayStr(),streak}; S.mn+=cry; gain(crd); SFX.chest();
+  toast(`Coffre du jour ${d} : +${fmt(cry)} matière noire et +${fmt(crd)} crédits`); dayDirty=true;
 }
 function chestModal(){
   const {d}=chestDay();
-  showModal({title:`Coffre du jour ${d}/7`,body:`<p>Reviens chaque jour : le coffre grossit jusqu'au jour 7.</p><div class="gift"><span>+${fmt(CHEST[d-1]*crysScale())} cristaux</span><span>+${fmt(Math.max(100,incomeRate()*120*d))} cr</span></div>`,btns:[{label:'Ouvrir le coffre',fn:claimChest}]});
+  showModal({title:`Coffre du jour ${d}/7`,body:`<p>Reviens chaque jour : le coffre grossit jusqu'au jour 7.</p><div class="gift"><span style="color:var(--mn)">+${fmt(CHEST[d-1]*crysScale())} M.N.</span><span>+${fmt(Math.max(100,incomeRate()*120*d))} cr</span></div>`,btns:[{label:'Ouvrir le coffre',fn:claimChest}]});
 }
 function seeded(str){let h=2166136261;for(const c of str)h=Math.imul(h^c.charCodeAt(0),16777619);return()=>{h=Math.imul(h^(h>>>15),2246822507);h=Math.imul(h^(h>>>13),3266489909);return((h^=h>>>16)>>>0)/4294967296}}
 function checkDay(){
@@ -645,7 +697,7 @@ function checkDay(){
   }
 }
 function missionProg(m){return Math.min(m.goal,(S.st[m.k]||0)-m.base)}
-function claimMission(i){const m=S.missions.list[i];if(m.done||missionProg(m)<m.goal)return;m.done=true;S.crys+=m.rew;SFX.chest();toast(`Mission réussie : +${fmt(m.rew)} ${m.rew>1?'cristaux':'cristal'}`);dayDirty=true}
+function claimMission(i){const m=S.missions.list[i];if(m.done||missionProg(m)<m.goal)return;m.done=true;S.mn+=m.rew;SFX.chest();toast(`Mission réussie : +${fmt(m.rew)} matière noire`);dayDirty=true}
 
 /* ---------- avance auto ---------- */
 let bossRetryAt=0;
@@ -736,7 +788,7 @@ function buy(u){
   S.cr-=tot; S.up[u.k]+=n; S.st.buys+=n; dirty=true; SFX.buy();
   if(n>1) toast(`${u.n} +${n} niveaux`);
 }
-function buySD(s){if(hasD(s.k)||S.crys<s.cost)return;S.crys-=s.cost;S.sdr.push(s.k);SFX.buy();toast(`${s.n} en service !`)}
+function buySD(s){if(hasD(s.k)||S.mn<s.cost)return;S.mn-=s.cost;S.sdr.push(s.k);SFX.buy();toast(`${s.n} en service !`)}
 function buyTalent(t){
   const l=S.tal[t.k]; if(l>=t.max) return;
   const c=Math.ceil(t.cost(l)); if(S.crys<c) return;
@@ -746,14 +798,14 @@ function buyTalent(t){
 }
 function hangar(kind,it){
   const own=kind==='ship'?S.ships:S.drills;
-  if(!own.includes(it.k)){ if(S.crys<it.cost) return; S.crys-=it.cost; own.push(it.k); toast(`${it.n} ajouté au hangar !`) }
+  if(!own.includes(it.k)){ if(S.mn<it.cost) return; S.mn-=it.cost; own.push(it.k); toast(`${it.n} ajouté au hangar !`) }
   if(kind==='ship') S.ship=it.k; else S.drillSkin=it.k;
 }
 let hyperArmed=false, jumpArmed=false;
 function resetRun(){
   const keep={crys:S.crys,crysTotal:S.crysTotal,tal:S.tal,ach:S.ach,st:S.st,autoOn:S.autoOn,reachedP:S.reachedP,
     moonDone:S.moonDone,ships:S.ships,ship:S.ship,drills:S.drills,drillSkin:S.drillSkin,
-    sdr:S.sdr,museum:S.museum,codes:S.codes,seenVer:S.seenVer,bot:S.bot,cards:S.cards,buyQty:S.buyQty,autoAdv:S.autoAdv,daily:S.daily,missions:S.missions,bossBeat:S.bossBeat,sound:S.sound,
+    sdr:S.sdr,museum:S.museum,mn:S.mn,ch:S.ch,codes:S.codes,seenVer:S.seenVer,bot:S.bot,cards:S.cards,buyQty:S.buyQty,autoAdv:S.autoAdv,daily:S.daily,missions:S.missions,bossBeat:S.bossBeat,sound:S.sound,
     sys:S.sys,best:S.best,bossFail:S.bossFail,res:S.res,lab:S.lab,bhScores:S.bhScores,bhDay:S.bhDay};
   bossWarned={};
   const auto=S.up.auto;
@@ -783,19 +835,45 @@ const labLvls=()=>Object.values(S.res).reduce((a,b)=>a+b,0);
 function startRes(r){ if(S.lab) return; const l=S.res[r.k]; if(r.max&&l>=r.max) return; const c=resCost(l); if(S.cr<c) return;
   S.cr-=c; S.lab={k:r.k,end:Date.now()+resTime(l)*1000,dur:resTime(l)}; SFX.buy(); labDirty=true; toast(`Recherche lancée : ${r.n}`) }
 const rushCost=()=>S.lab?Math.max(1,Math.ceil((S.lab.end-Date.now())/3600000*crysScale()*5)):0;
-function rushRes(){ if(!S.lab) return; const c=rushCost(); if(S.crys<c) return; S.crys-=c; S.lab.end=Date.now(); checkLab() }
+function rushRes(){ if(!S.lab) return; const c=rushCost(); if(S.mn<c) return; S.mn-=c; S.lab.end=Date.now(); checkLab() }
 function checkLab(){ if(S.lab&&Date.now()>=S.lab.end){const r=RESEARCH.find(x=>x.k===S.lab.k);S.res[r.k]++;S.lab=null;SFX.chest();toast(`Recherche terminée : ${r.n} niv. ${S.res[r.k]}`);labDirty=true} }
 function fmtTime(sec){sec=Math.max(0,Math.ceil(sec));const h=Math.floor(sec/3600),m=Math.floor(sec%3600/60),x=sec%60;return h?`${h} h ${m} min`:m?`${m} min ${x} s`:`${x} s`}
 /* trou noir */
 const bhBest=()=>S.bhScores.length?S.bhScores[0].s:0;
+/* ===== charges explosives ===== */
+const chCapAt=l=>Math.round(10*Math.pow(1+l,1.5));
+const chRechAt=l=>Math.max(3,Math.round(60*Math.pow(0.9,l)));
+const chCap=()=>chCapAt(S.ch.cap), chRech=()=>chRechAt(S.ch.rech);
+const chOpenType=c=>(S.reachedP||0)>=c.p||S.sys>0;
+const mnScale=()=>crysScale();
+const mnPerCharge=()=>Math.max(1,Math.round(mnScale()*0.5));
+let chAutoT=0;
+function chTick(now){
+  const c=S.ch,R=chRech()*1000,cap=chCap();
+  if(c.n>=cap){c.last=now;return}
+  const k=Math.floor((now-c.last)/R);
+  if(k>0){c.n=Math.min(cap,c.n+k*(1+c.multi));c.last+=k*R;if(c.n>=cap)c.last=now}
+}
+function fireCharge(k,silent){
+  const c=CHARGES.find(x=>x.k===k);if(!c||!chOpenType(c)||S.ch.n<1||bh)return false;
+  S.ch.n--;S.st.charges=(S.st.charges||0)+1;
+  if(k==='sismique'){damage(clickPow()*40);shake=14;burst('#ffb020',24)}
+  else if(k==='noire'){const g=mnPerCharge();S.mn+=g;S.st.mnTot=(S.st.mnTot||0)+g;if(!silent)floatText(`+${fmt(g)} M.N.`,'#ff6fd8',true);burst('#ff6fd8',16)}
+  else if(k==='frag'){damage(blockHp(S.p,S.e)*3);shake=12;burst('#3df2ff',30)}
+  else if(k==='or'){if(!S.boss){S.rare=true;botSay('Bip ! Minerai brillant forcé !',2)}burst('#ffe27a',20)}
+  else if(k==='plasma'){if(S.boss){S.boss.hp-=S.boss.max*0.08;if(S.boss.hp<=0)winBoss()}else damage(clickPow()*150);shake=16;burst('#c08cff',30)}
+  if(!silent)tone(k==='noire'?220:120,.18,'sawtooth',.06,k==='noire'?2:.4);
+  return true;
+}
+function buyArs(a){const l=S.ch[a.k];if(l>=a.max)return;const c=a.cost(l);if(S.mn<c)return;S.mn-=c;S.ch[a.k]++;if(a.k==='cap')S.ch.n=Math.min(chCap(),S.ch.n+5);arsDirty=true;SFX.buy()}
 function startBH(){ if(bh||S.boss) return; const m=Math.max(10,drillPowAt(S.up.drill)*dmgMul()*4+dps()*2); bh={t:60,score:0,max:m,hp:m}; openTab(null); tone(70,.8,'sawtooth',.08,.4); vib(80); toast('Défi du trou noir : 60 secondes !') }
 function endBH(){
   const sc=bh.score; bh=null; const today=dayStr(), rew=S.bhDay!==today?Math.min(15,Math.floor(sc/5))*crysScale():0;
   const rec=sc>bhBest();
   S.bhScores.push({s:sc,d:today}); S.bhScores.sort((a,b)=>b.s-a.s); S.bhScores=S.bhScores.slice(0,5);
-  if(rew){S.bhDay=today;S.crys+=rew}
+  if(rew){S.bhDay=today;S.mn+=rew}
   bhDirty=true; rec?SFX.win():SFX.chest();
-  showModal({title:rec?'Nouveau record !':'Défi terminé',body:`<p>Tu as cassé <b>${sc}</b> bloc${sc>1?'s':''} dans le trou noir.</p><p>Record : ${bhBest()}</p>${rew?`<div class="gift"><span>+${rew} cristaux</span></div>`:'<p><small>La récompense en cristaux se gagne une fois par jour.</small></p>'}`,btns:[{label:'OK'}]});
+  showModal({title:rec?'Nouveau record !':'Défi terminé',body:`<p>Tu as cassé <b>${sc}</b> bloc${sc>1?'s':''} dans le trou noir.</p><p>Record : ${bhBest()}</p>${rew?`<div class="gift"><span>+${rew} matière noire</span></div>`:'<p><small>La récompense en cristaux se gagne une fois par jour.</small></p>'}`,btns:[{label:'OK'}]});
 }
 /* événements */
 function startEvent(){
@@ -803,7 +881,7 @@ function startEvent(){
   evt={k,t:EVENTS[k].d}; toast(EVENTS[k].t); SFX.ast();
   if(k==='halley'){const {top}=geom();comet={x:W+90,y:top*.3,vx:-(W+200)/EVENTS.halley.d,vy:top*.2/EVENTS.halley.d}}
 }
-function catchComet(){comet=null;const cc=3*crysScale();S.crys+=cc;S.st.halley++;SFX.win();burst('#9fe8ff',40);toast(`Comète attrapée : +${fmt(cc)} cristaux !`)}
+function catchComet(){comet=null;const cc=3*crysScale();S.mn+=cc;S.st.halley++;SFX.win();burst('#9fe8ff',40);toast(`Comète attrapée : +${fmt(cc)} matière noire !`)}
 function checkAch(){
   for(const a of ACHS){ if(!S.ach.includes(a.id)&&a.ok()){S.ach.push(a.id);toast(`Succès : ${a.n} (+2 %)`);achDirty=true} }
 }
@@ -833,8 +911,9 @@ function makeFullState(){
   s.ships=SHIPS.map(x=>x.k);s.ship='arche';s.drills=DRILLS.map(x=>x.k);s.drillSkin='neant';s.sdr=SDRONES.map(x=>x.k);
   RESEARCH.forEach(r=>s.res[r.k]=r.max||28);
   s.bot={xp:0,lvl:100,skin:'soleil'};
+  s.mn=5e6;Object.assign(s.ch,{n:2000,last:Date.now(),cap:40,rech:30,multi:4,auto:1,autoOn:false,autoType:'noire'});
   s.crysTotal=600000;s.crys=250000;s.cr=1e72;s.earned=1e75;
-  Object.assign(s.st,{blocks:5e6,taps:2e5,ast:500,hyper:60,rare:2e5,buys:5e4,boss:300,halley:20,jump:4});
+  Object.assign(s.st,{charges:30000,mnTot:1e7,blocks:5e6,taps:2e5,ast:500,hyper:60,rare:2e5,buys:5e4,boss:300,halley:20,jump:4});
   s.daily={last:'',streak:7};s.bhScores=[{s:120,d:new Date().toLocaleDateString('fr-CA')}];s.autoAdv=true;s.seenVer=GAME_VER;
   s.ach=ACHS.map(a=>a.id);
   s.p=ORDER[LAST];s.e=5;s.hp=10;s.t=Date.now();
@@ -843,9 +922,11 @@ function makeFullState(){
 function applyState(d){
   if(!(d&&d.up))return false;
   const f=fresh(), g=fresh();S=Object.assign(f,d);
-  for(const k of ['up','tal','st','daily','res','bot'])S[k]=Object.assign(g[k],d[k]||{});
+  for(const k of ['up','tal','st','daily','res','bot','ch'])S[k]=Object.assign(g[k],d[k]||{});
   for(const k of ['unl','prog','cleared','moonOpen']){const a=S[k]||[];for(let i=a.length;i<NW;i++)a.push(g[k][i]);S[k]=a}
   if(!Array.isArray(S.codes))S.codes=[];
+  if(!('mn' in d)){const half=Math.floor((S.crys||0)/2);S.mn=half;S.crys-=half}  // ancienne partie : on partage les cristaux
+  if(!S.ch.last)S.ch.last=Date.now();
   return true;
 }
 function load(data){
@@ -864,17 +945,17 @@ function load(data){
     const blocks=S.st.blocks-b0, val=worth()-v0, h=Math.floor(away/3600), m=Math.floor(away%3600/60);
     if(blocks>0) showModal({title:'Bon retour !',
       body:`<p>Pendant ton absence (${h?h+' h ':''}${m} min), tes drones ont cassé <b>${fmt(blocks)}</b> blocs.</p><div class="gift"><span>+${fmt(val)} cr</span></div>`,
-      btns:[{label:'Récupérer'},{label:'Doubler · 1 cristal',cls:'hyper',dis:S.crys<1,fn:()=>{if(S.crys<1)return;S.crys--;gain(val);toast(`Gains doublés : +${fmt(val)} crédits`)}}]});
+      btns:[{label:'Récupérer'},{label:`Doubler · ${fmt(mnScale())} M.N.`,cls:'hyper',dis:S.mn<mnScale(),fn:()=>{if(S.mn<mnScale())return;S.mn-=mnScale();gain(val);toast(`Gains doublés : +${fmt(val)} crédits`)}}]});
   }
 }
 
 /* ---------- interface ---------- */
 const $=id=>document.getElementById(id);
-let botDirty=true, dirty=true, achDirty=true, dayDirty=true, musDirty=true, labDirty=true, bhDirty=true, quiet=false, tab=null, bossWarned={}, chestShown=false;
+let arsDirty=true, botDirty=true, dirty=true, achDirty=true, dayDirty=true, musDirty=true, labDirty=true, bhDirty=true, quiet=false, tab=null, bossWarned={}, chestShown=false;
 function toast(m){if(quiet)return;const t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('show'),2600)}
-const TITLES={reglages:'Réglages',robot:'Robot compagnon',atelier:'Atelier',labo:'Laboratoire',planetes:'Système solaire',soute:'Soute',etoiles:'Étoiles',jour:'Aujourd’hui'};
+const TITLES={arsenal:'Arsenal',reglages:'Réglages',robot:'Robot compagnon',atelier:'Atelier',labo:'Laboratoire',planetes:'Système solaire',soute:'Soute',etoiles:'Étoiles',jour:'Aujourd’hui'};
 function openTab(t){
-  tab=(t===tab)?null:t; hyperArmed=false; if(tab==='robot')botDirty=true; jumpArmed=false; if(tab==='labo')labDirty=true; if(tab==='jour'){checkDay();dayDirty=true}
+  tab=(t===tab)?null:t; hyperArmed=false; if(tab==='arsenal')arsDirty=true; if(tab==='robot')botDirty=true; jumpArmed=false; if(tab==='labo')labDirty=true; if(tab==='jour'){checkDay();dayDirty=true}
   document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('on',b.dataset.t===tab));
   Object.keys(TITLES).forEach(k=>$('pane-'+k).hidden=k!==tab);
   $('sheet').classList.toggle('open',!!tab);
@@ -902,6 +983,11 @@ function buildStatic(){
   $('sndBtn').classList.toggle('off',!S.sound);
   $('bossBtn').onclick=startBoss;
   $('setBtn').onclick=()=>openTab('reglages');
+  $('chOpen').onclick=()=>openTab('arsenal');
+  $('chBtns').onclick=ev=>{const b=ev.target.closest('button[data-c]');if(b&&!b.disabled)fireCharge(b.dataset.c)};
+  $('arsUps').onclick=ev=>{const b=ev.target.closest('button[data-a]');if(b&&!b.disabled)buyArs(ARS.find(a=>a.k===b.dataset.a))};
+  $('autoCh').onchange=e=>{S.ch.autoOn=e.target.checked;arsDirty=true};
+  $('autoChips').onclick=ev=>{const b=ev.target.closest('button[data-c]');if(b&&!b.disabled){S.ch.autoType=b.dataset.c;arsDirty=true}};
   $('sv_ver').textContent='v'+GAME_VERSION+(PROFILE==='full'?' (100 %)':'');
   $('sv_now').onclick=()=>svMsg(save()?'Partie sauvegardée.':'Impossible de sauvegarder dans ce navigateur : exporte un code pour garder ta partie.');
   $('sv_exp').onclick=async()=>{const c=makeCode(),t=$('sv_code');t.value=c;const ok=await copyText(c,t);
@@ -976,8 +1062,8 @@ function redeemCode(){
   if(!r){out(inp.value.trim()?'Code invalide.':'Entre un code cadeau.');return}
   if(S.codes.includes(r.id)){out('Ce code a déjà été utilisé.');return}
   const g=r.n*10*crysScale();
-  S.codes.push(r.id);S.crys+=g;inp.value='';save();SFX.win();
-  out(`+${fmt(g)} cristaux reçus !`);toast(`Code cadeau : +${fmt(g)} cristaux`);
+  S.codes.push(r.id);S.mn+=g;inp.value='';save();SFX.win();
+  out(`+${fmt(g)} matière noire reçue !`);toast(`Code cadeau : +${fmt(g)} matière noire`);
 }
 /* ===== sauvegarde Discord (Supabase, comme The Warrior) ===== */
 const ON_SITE=/^https?:$/.test(location.protocol)&&/github\.io$/.test(location.hostname);
@@ -1093,7 +1179,7 @@ function buildEtages(){
   $('etages').innerHTML=Wd.o.map((o,e)=>`<button class="et" data-e="${e}" id="et${e}" aria-label="Étage ${e+1} : ${o[0]}"><span id="etg${e}"></span><span class="pb"><i id="etp${e}"></i></span></button>`).join('');
 }
 function hangarPrice(el,own,eq,cost){
-  el.className='price'+(eq?' eq':own?'':' cry');
+  el.className='price'+(eq?' eq':own?'':' mn');
   el.textContent=eq?'Équipé':own?'Équiper':cost;
 }
 function render(){
@@ -1110,6 +1196,14 @@ function render(){
   $('boost').innerHTML=(boostT>0?`<span>${boostName} · ${Math.ceil(boostT)} s</span>`:'')+(flareT>0?`<span>ÉRUPTION ×3 · ${Math.ceil(flareT)} s</span>`:'')+(evt?`<span class="evt">${EVENTS[evt.k].n} · ${Math.ceil(evt.t)} s</span>`:'')+(combo>=5?`<span class="combo">COMBO ${combo} · ×${comboMul().toFixed(1).replace('.',',')}</span>`:'');
   $('autoAdv').classList.toggle('on',!!S.autoAdv);$('autoAdv').setAttribute('aria-pressed',S.autoAdv?'true':'false');
   checkLab();
+  {const cap=chCap(),n=S.ch.n,full=n>=cap,left=chRech()-((Date.now()-S.ch.last)/1000)%chRech();
+   $('chN').textContent=`${fmt(n)}/${fmt(cap)}`;$('chOpen').classList.toggle('full',full);
+   $('chT').textContent=full?'RÉSERVE PLEINE':`+${1+S.ch.multi} · ${fmtTime(left)}`;
+   $('sMn').textContent=fmt(S.mn);
+   const sig=CHARGES.map(c=>chOpenType(c)?1:0).join('')+S.ch.autoType+(S.ch.auto&&S.ch.autoOn?1:0);
+   if($('chBtns').dataset.sig!==sig){$('chBtns').dataset.sig=sig;
+     $('chBtns').innerHTML=CHARGES.map(c=>{const ok=chOpenType(c);return `<button class="chb${S.ch.auto&&S.ch.autoOn&&S.ch.autoType===c.k?' auto':''}" data-c="${c.k}" style="--c:${c.col}" aria-label="Charge ${c.n}${ok?'':' (verrouillée)'}" ${ok?'':'disabled data-lock="1"'}><svg class="i" viewBox="0 0 24 24" aria-hidden="true">${ok?c.ic:'<rect x="6" y="11" width="12" height="9"/><path d="M9 11V8a3 3 0 0 1 6 0v3"/>'}</svg>${ok?c.s:'???'}</button>`}).join('')}
+   document.querySelectorAll('#chBtns .chb').forEach(b=>{if(!b.dataset.lock)b.disabled=n<1||!!bh})}
   const B=S.boss;
   $('bossbar').hidden=!B&&!bh; $('bossBtn').hidden=!bossAvail()||!!tab;
   if(bh){$('bossName').textContent=`Trou noir · ${bh.score} bloc${bh.score>1?'s':''}`;$('bossHp').style.width=Math.max(0,100*bh.hp/bh.max)+'%';$('bossT').textContent=Math.ceil(bh.t)+' s'}
@@ -1137,7 +1231,7 @@ function render(){
   let tot=0,v=0; keys.forEach(k=>{const [w,e]=k.split('-').map(Number);tot+=S.inv[k];v+=S.inv[k]*oreVal(w,e)});
   $('bdgInv').hidden=!tot; $('bdgInv').textContent=fmt(tot);
   const cg=crysGain(), canHyper=cg>=1&&(S.reachedP||0)>=1;
-  const buyable=TALENTS.some(t=>S.tal[t.k]<t.max&&S.crys>=Math.ceil(t.cost(S.tal[t.k])))||[...SHIPS,...DRILLS].some(s=>s.cost&&S.crys>=s.cost&&!S.ships.includes(s.k)&&!S.drills.includes(s.k));
+  const buyable=TALENTS.some(t=>S.tal[t.k]<t.max&&S.crys>=Math.ceil(t.cost(S.tal[t.k])))||[...SHIPS,...DRILLS].some(s=>s.cost&&S.mn>=s.cost&&!S.ships.includes(s.k)&&!S.drills.includes(s.k));
   $('bdgSt').hidden=!((canHyper&&cg>=Math.max(1,S.crysTotal*0.5))||buyable);
   if(!tab) return;
   if(tab==='planetes'){
@@ -1172,6 +1266,20 @@ function render(){
       musDirty=false;
     }
   }
+  if(tab==='arsenal'){
+    $('mnVal').textContent=fmt(S.mn);
+    if(arsDirty){
+      $('chList').innerHTML=CHARGES.map(c=>{const ok=chOpenType(c);return `<div class="card" style="cursor:default"><span class="ic" style="--c:${ok?c.col:'#4e6a86'}"><svg class="i" viewBox="0 0 24 24" aria-hidden="true">${c.ic}</svg></span><b>${ok?c.n:'Verrouillée'}</b><span class="lv"></span><small>${ok?c.d+(c.k==='noire'?` (+${fmt(mnPerCharge())})`:''):'Débloquée en atteignant '+PLANETS[c.p].n}</small><span></span></div>`}).join('');
+      $('arsUps').innerHTML=ARS.map(a=>`<button class="card" data-a="${a.k}" id="ars-${a.k}"><span class="ic" style="--c:#ff6fd8">${a.n[0]}</span><b>${a.n}</b><span class="lv" id="arsl-${a.k}"></span><small id="arsd-${a.k}"></small><span class="price mn num" id="arsc-${a.k}"></span></button>`).join('');
+      $('autoBox').hidden=!S.ch.auto;$('autoCh').checked=!!S.ch.autoOn;
+      $('autoChips').innerHTML=CHARGES.map(c=>`<button class="chip${S.ch.autoType===c.k?' on':''}" data-c="${c.k}" ${chOpenType(c)?'':'disabled'}>${chOpenType(c)?c.n:'???'}</button>`).join('');
+      arsDirty=false;
+    }
+    ARS.forEach(a=>{const l=S.ch[a.k],mx=l>=a.max,c=a.cost(l),b=$('ars-'+a.k);
+      $('arsl-'+a.k).textContent=a.max===1?'':`niv. ${l}`;$('arsd-'+a.k).textContent=mx?'Au maximum':a.d(l);
+      const pr=$('arsc-'+a.k);pr.textContent=mx?'Max':fmt(c);pr.className='price num'+(mx?'':' mn');
+      b.disabled=mx||S.mn<c;b.classList.toggle('done',mx)});
+  }
   if(tab==='reglages'){
     const sec=Math.floor((Date.now()-lastSave)/1000);
     $('sv_t').textContent=!lastSave?'—':sec<5?'à l’instant':sec<60?'il y a '+sec+' s':'il y a '+Math.floor(sec/60)+' min';
@@ -1196,7 +1304,7 @@ function render(){
     }
     const L=S.lab;
     if(L){const r=RESEARCH.find(x=>x.k===L.k), left=(L.end-Date.now())/1000;
-      $('labNow').innerHTML=`<div class="labnow"><div class="row"><b>${r.n} niv. ${S.res[r.k]+1}</b><span class="num">${fmtTime(left)}</span></div><div class="bar"><i style="width:${Math.min(100,100*(1-left/L.dur))}%"></i></div><button class="big hyper" id="rush" ${S.crys<rushCost()?'disabled':''}>Finir maintenant · ${rushCost()} ${rushCost()>1?'cristaux':'cristal'}</button></div>`}
+      $('labNow').innerHTML=`<div class="labnow"><div class="row"><b>${r.n} niv. ${S.res[r.k]+1}</b><span class="num">${fmtTime(left)}</span></div><div class="bar"><i style="width:${Math.min(100,100*(1-left/L.dur))}%"></i></div><button class="big hyper" id="rush" ${S.mn<rushCost()?'disabled':''}>Finir maintenant · ${fmt(rushCost())} M.N.</button></div>`}
     else $('labNow').innerHTML=`<div class="labnow"><small>Lance une recherche : elle continue même quand tu ne joues pas.</small></div>`;
     RESEARCH.forEach(r=>{const l=S.res[r.k], mx=r.max&&l>=r.max, c=resCost(l);
       $('rl-'+r.k).textContent=`niv. ${l}`; $('rd-'+r.k).textContent=`${r.d} · ${fmtTime(resTime(l))}`;
@@ -1205,7 +1313,7 @@ function render(){
   if(tab==='jour'){
     if(bhDirty||dayDirty){
       const today=dayStr();
-      $('bhCard').innerHTML=`<small>60 secondes pour casser un maximum de blocs. Ils deviennent de plus en plus durs.</small><div class="scores">${S.bhScores.length?S.bhScores.map((x,i)=>`<span>${i+1}. <b>${x.s}</b> blocs · ${x.d.slice(5).split('-').reverse().join('/')}</span>`).join(''):'<span>Aucun score pour l’instant</span>'}</div><small>${S.bhDay===today?'Récompense du jour déjà gagnée.':`Récompense du jour : ${fmt(crysScale())} ${crysScale()>1?'cristaux':'cristal'} par 5 blocs (15 paliers max).`}</small><button class="big hyper" id="bhGo">Plonger dans le trou noir</button>`;
+      $('bhCard').innerHTML=`<small>60 secondes pour casser un maximum de blocs. Ils deviennent de plus en plus durs.</small><div class="scores">${S.bhScores.length?S.bhScores.map((x,i)=>`<span>${i+1}. <b>${x.s}</b> blocs · ${x.d.slice(5).split('-').reverse().join('/')}</span>`).join(''):'<span>Aucun score pour l’instant</span>'}</div><small>${S.bhDay===today?'Récompense du jour déjà gagnée.':`Récompense du jour : ${fmt(crysScale())} matière noire par 5 blocs (15 paliers max).`}</small><button class="big hyper" id="bhGo">Plonger dans le trou noir</button>`;
       bhDirty=false;
     }
     if(dayDirty){
@@ -1215,7 +1323,7 @@ function render(){
       dayDirty=false;
     }
     S.missions.list.forEach((m,i)=>{const p=missionProg(m);$('misp'+i).style.width=(100*p/m.goal)+'%';$('mist'+i).textContent=`${fmt(p)} / ${fmt(m.goal)}`;
-      const b=$('misb'+i);b.textContent=m.done?'Fait ✓':`+${fmt(m.rew)} ${m.rew>1?'cristaux':'cristal'}`;b.disabled=m.done||p<m.goal;$('mis'+i).classList.toggle('claimed',m.done)});
+      const b=$('misb'+i);b.textContent=m.done?'Fait ✓':`+${fmt(m.rew)} M.N.`;b.disabled=m.done||p<m.goal;$('mis'+i).classList.toggle('claimed',m.done)});
   }
   if(tab==='atelier'){
     document.querySelectorAll('#qty button').forEach(b=>b.classList.toggle('on',String(S.buyQty)===b.dataset.q));
@@ -1241,9 +1349,9 @@ function render(){
     else if(!jumpReady()){jb.textContent=`Bats le gardien d'Éris pour sauter vers ${nx.n}`;jb.disabled=true}
     else{jb.disabled=false;jb.textContent=jumpArmed?'Sûr ? Retour sur Mercure, tout ×10':`Saut stellaire vers ${nx.n}`}
     jb.classList.toggle('sure',jumpArmed);
-    SHIPS.forEach(s=>{const own=S.ships.includes(s.k);hangarPrice($('shp-'+s.k),own,S.ship===s.k,s.cost);$('sh-'+s.k).disabled=S.ship===s.k||(!own&&S.crys<s.cost)});
-    DRILLS.forEach(s=>{const own=S.drills.includes(s.k);hangarPrice($('drp-'+s.k),own,S.drillSkin===s.k,s.cost);$('dr-'+s.k).disabled=S.drillSkin===s.k||(!own&&S.crys<s.cost)});
-    SDRONES.forEach(s=>{const own=hasD(s.k),el=$('sdp-'+s.k);el.className='price'+(own?' eq':' cry');el.textContent=own?'En service':s.cost;$('sd-'+s.k).disabled=own||S.crys<s.cost});
+    SHIPS.forEach(s=>{const own=S.ships.includes(s.k);hangarPrice($('shp-'+s.k),own,S.ship===s.k,s.cost);$('sh-'+s.k).disabled=S.ship===s.k||(!own&&S.mn<s.cost)});
+    DRILLS.forEach(s=>{const own=S.drills.includes(s.k);hangarPrice($('drp-'+s.k),own,S.drillSkin===s.k,s.cost);$('dr-'+s.k).disabled=S.drillSkin===s.k||(!own&&S.mn<s.cost)});
+    SDRONES.forEach(s=>{const own=hasD(s.k),el=$('sdp-'+s.k);el.className='price'+(own?' eq':' mn');el.textContent=own?'En service':fmt(s.cost);$('sd-'+s.k).disabled=own||S.mn<s.cost});
     TALENTS.forEach(t=>{
       const l=S.tal[t.k], maxed=l>=t.max, c=Math.ceil(t.cost(l)), b=$('ta-'+t.k);
       $('tl-'+t.k).textContent=`${l}/${t.max}`;
@@ -1579,6 +1687,8 @@ function start(data){
       else if(ast.life<=0||ast.x<-60||ast.x>W+60){ast=null;astTimer=astDelay()}}
     else if((astTimer-=dt)<=0){const left=Math.random()<.5;const {top}=geom();ast={x:left?-30:W+30,y:top*0.35+Math.random()*top*0.45,vx:(left?1:-1)*W/9,life:10,age:0};botSay('Astéroïde doré en approche !',2.5)}
     if(S.boss){S.boss.t-=dt;if(S.boss.t<=0)loseBoss()}
+    chTick(Date.now());
+    if(S.ch.auto&&S.ch.autoOn&&(chAutoT+=dt)>=3){chAutoT=0;fireCharge(S.ch.autoType,true)}
     if(bh){bh.t-=dt;if(bh.t<=0)endBH()}
     if(flareT>0)flareT=Math.max(0,flareT-dt);
     if(sysRule(S.sys)===1&&(flareTimer-=dt)<=0){flareTimer=120;flareT=20;toast('Éruption stellaire ! Dégâts ×3 pendant 20 s');tone(80,.6,'sawtooth',.07,2)}
